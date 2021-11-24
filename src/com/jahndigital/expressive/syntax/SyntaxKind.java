@@ -1,4 +1,4 @@
-package com.jahndigital.expressive;
+package com.jahndigital.expressive.syntax;
 
 /**
  * Used to easily reference the type of a SyntaxNode
@@ -18,7 +18,8 @@ public enum SyntaxKind
     EndOfFileToken,
 
     // SyntaxNodes
-    NumberExpression,
+    LiteralExpression,
     BinaryExpression,
-    UnaryExpression, ParenthesisedExpression
+    UnaryExpression,
+    ParenthesisedExpression
 }

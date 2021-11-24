@@ -1,4 +1,4 @@
-package com.jahndigital.expressive;
+package com.jahndigital.expressive.syntax;
 
 /**
  * Contains information about the precedence of different operations.

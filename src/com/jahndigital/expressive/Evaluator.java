@@ -1,12 +1,15 @@
 package com.jahndigital.expressive;
 
+import com.jahndigital.expressive.binding.*;
+import com.jahndigital.expressive.syntax.*;
+
 /**
  * Walks the AST and evaluates the expression into an integer.
  */
-final class Evaluator {
-    private final ExpressionSyntaxNode _root;
+public final class Evaluator {
+    private final BoundExpression _root;
 
-    public Evaluator(ExpressionSyntaxNode root) {
+    public Evaluator(BoundExpression root) {
         this._root = root;
     }
 
@@ -14,50 +17,50 @@ final class Evaluator {
         return evaluateExpression(_root);
     }
 
-    private int evaluateExpression(ExpressionSyntaxNode root) throws Exception {
-        if (root instanceof LiteralExpressionSyntaxNode) {
-            return (int) ((LiteralExpressionSyntaxNode) root).getToken().getValue();
+    private int evaluateExpression(BoundExpression root) throws Exception {
+        if (root instanceof BoundLiteralExpression) {
+            return (int) ((BoundLiteralExpression) root).getValue();
         }
 
-        if (root instanceof UnaryExpressionSyntaxNode) {
-            UnaryExpressionSyntaxNode u = (UnaryExpressionSyntaxNode) root;
+        if (root instanceof BoundUnaryExpression) {
+            BoundUnaryExpression u = (BoundUnaryExpression)root;
             int operand = evaluateExpression(u.getOperand());
-            SyntaxKind kind = u.getOperator().getKind();
+            BoundUnaryOperatorKind kind = u.getOperatorKind();
 
-            if (kind == SyntaxKind.PlusToken) {
-                return operand;
+            switch (kind) {
+                case Identity:
+                    return operand;
+                case Negation:
+                    return -operand;
+                default:
+                    throw new Exception(String.format("Unexpected unary operator %s", kind));
             }
-
-            if (kind == SyntaxKind.MinusToken) {
-                return -operand;
-            }
-
-            throw new Exception(String.format("Unexpected unary operator %s", kind));
         }
 
-        if (root instanceof BinaryExpressionSyntaxNode) {
-            BinaryExpressionSyntaxNode b = (BinaryExpressionSyntaxNode) root;
+        if (root instanceof BoundBinaryExpression) {
+            BoundBinaryExpression b = (BoundBinaryExpression)root;
             int left = evaluateExpression(b.getLeft());
             int right = evaluateExpression(b.getRight());
 
-            SyntaxKind operation = b.getOperator().getKind();
-            if (operation == SyntaxKind.PlusToken) {
-                return left + right;
-            } else if (operation == SyntaxKind.MinusToken) {
-                return left - right;
-            } else if (operation == SyntaxKind.StarToken) {
-                return left * right;
-            } else if (operation == SyntaxKind.SlashToken) {
-                return left / right;
+            BoundBinaryOperatorKind operation = b.getOperatorKind();
+            switch (operation) {
+                case Addition:
+                    return left + right;
+                case Subtraction:
+                    return left - right;
+                case Multiplication:
+                    return left * right;
+                case Division:
+                    return left / right;
+                default:
+                    throw new Exception(String.format("Unexpected binary operator %s", operation));
             }
-
-            throw new Exception(String.format("Unexpected binary operator %s", operation));
         }
 
-        if (root instanceof ParenthesisedExpressionSyntax) {
-            ParenthesisedExpressionSyntax p = (ParenthesisedExpressionSyntax) root;
-            return evaluateExpression(p.getExpression());
-        }
+//        if (root instanceof ParenthesisedExpressionSyntax) {
+//            ParenthesisedExpressionSyntax p = (ParenthesisedExpressionSyntax) root;
+//            return evaluateExpression(p.getExpression());
+//        }
 
         return 0;
     }

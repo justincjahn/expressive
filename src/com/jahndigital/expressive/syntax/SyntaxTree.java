@@ -1,4 +1,4 @@
-package com.jahndigital.expressive;
+package com.jahndigital.expressive.syntax;
 
 /**
  * Represents the head of an Abstract Syntax Tree (AST).

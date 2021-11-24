@@ -1,4 +1,4 @@
-package com.jahndigital.expressive;
+package com.jahndigital.expressive.syntax;
 
 import java.util.Arrays;
 
@@ -18,7 +18,7 @@ public final class LiteralExpressionSyntaxNode extends ExpressionSyntaxNode {
 
     @Override
     public SyntaxKind getKind() {
-        return SyntaxKind.NumberExpression;
+        return SyntaxKind.LiteralExpression;
     }
 
     @Override

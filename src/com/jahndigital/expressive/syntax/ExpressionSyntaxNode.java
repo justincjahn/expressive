@@ -1,4 +1,4 @@
-package com.jahndigital.expressive;
+package com.jahndigital.expressive.syntax;
 
 /**
  * Represents an individual expression in an Abstract Syntax Tree (AST)

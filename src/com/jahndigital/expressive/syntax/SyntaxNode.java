@@ -1,4 +1,4 @@
-package com.jahndigital.expressive;
+package com.jahndigital.expressive.syntax;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

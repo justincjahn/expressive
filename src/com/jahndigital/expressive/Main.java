@@ -1,5 +1,11 @@
 package com.jahndigital.expressive;
 
+import com.jahndigital.expressive.binding.Binder;
+import com.jahndigital.expressive.binding.BoundExpression;
+import com.jahndigital.expressive.syntax.ExpressionSyntaxNode;
+import com.jahndigital.expressive.syntax.SyntaxNode;
+import com.jahndigital.expressive.syntax.SyntaxTree;
+
 import java.util.*;
 
 public class Main {
@@ -30,7 +36,21 @@ public class Main {
             if (tree.getErrors().iterator().hasNext()) {
                 tree.getErrors().forEach(System.out::println);
             } else {
-                Evaluator evaluator = new Evaluator(tree.getRoot());
+                Binder binder = new Binder();
+                BoundExpression boundExpression = null;
+
+                try {
+                    boundExpression = binder.bindExpression(tree.getRoot());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (binder.getErrors().iterator().hasNext()) {
+                    tree.getErrors().forEach(System.out::println);
+                    continue;
+                }
+
+                Evaluator evaluator = new Evaluator(boundExpression);
 
                 try {
                     int result = evaluator.evaluate();
