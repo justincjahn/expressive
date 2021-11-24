@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Represents a token created by the Lexer
  */
-public class SyntaxToken extends SyntaxNode {
+public final class SyntaxToken extends SyntaxNode {
     private final SyntaxKind _kind;
     private final int _position;
     private final String _text;

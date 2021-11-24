@@ -3,10 +3,10 @@ package com.jahndigital.expressive;
 /**
  * Walks the AST and evaluates the expression into an integer.
  */
-public class Evaluator {
-    private final ExpressionSyntax _root;
+final class Evaluator {
+    private final ExpressionSyntaxNode _root;
 
-    public Evaluator(ExpressionSyntax root) {
+    public Evaluator(ExpressionSyntaxNode root) {
         this._root = root;
     }
 
@@ -14,13 +14,29 @@ public class Evaluator {
         return evaluateExpression(_root);
     }
 
-    private int evaluateExpression(ExpressionSyntax root) throws Exception {
-        if (root instanceof NumberExpressionSyntax) {
-            return (int) ((NumberExpressionSyntax) root).getToken().getValue();
+    private int evaluateExpression(ExpressionSyntaxNode root) throws Exception {
+        if (root instanceof LiteralExpressionSyntaxNode) {
+            return (int) ((LiteralExpressionSyntaxNode) root).getToken().getValue();
         }
 
-        if (root instanceof BinaryExpressionSyntax) {
-            BinaryExpressionSyntax b = (BinaryExpressionSyntax) root;
+        if (root instanceof UnaryExpressionSyntaxNode) {
+            UnaryExpressionSyntaxNode u = (UnaryExpressionSyntaxNode) root;
+            int operand = evaluateExpression(u.getOperand());
+            SyntaxKind kind = u.getOperator().getKind();
+
+            if (kind == SyntaxKind.PlusToken) {
+                return operand;
+            }
+
+            if (kind == SyntaxKind.MinusToken) {
+                return -operand;
+            }
+
+            throw new Exception(String.format("Unexpected unary operator %s", kind));
+        }
+
+        if (root instanceof BinaryExpressionSyntaxNode) {
+            BinaryExpressionSyntaxNode b = (BinaryExpressionSyntaxNode) root;
             int left = evaluateExpression(b.getLeft());
             int right = evaluateExpression(b.getRight());
 

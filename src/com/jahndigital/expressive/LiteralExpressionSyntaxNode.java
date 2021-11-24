@@ -5,15 +5,15 @@ import java.util.Arrays;
 /**
  * Represents a static numeric value.
  */
-public final class NumberExpressionSyntax extends ExpressionSyntax {
+public final class LiteralExpressionSyntaxNode extends ExpressionSyntaxNode {
     private final SyntaxToken _token;
 
     public SyntaxToken getToken() {
         return _token;
     }
 
-    public NumberExpressionSyntax(SyntaxToken numberToken) {
-        _token = numberToken;
+    public LiteralExpressionSyntaxNode(SyntaxToken t) {
+        _token = t;
     }
 
     @Override

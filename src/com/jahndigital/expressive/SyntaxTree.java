@@ -5,14 +5,14 @@ package com.jahndigital.expressive;
  */
 public final class SyntaxTree {
     private final Iterable<String> _errors;
-    private final ExpressionSyntax _root;
+    private final ExpressionSyntaxNode _root;
     private final SyntaxToken _eofToken;
 
     public Iterable<String> getErrors() {
         return _errors;
     }
 
-    public ExpressionSyntax getRoot() {
+    public ExpressionSyntaxNode getRoot() {
         return _root;
     }
 
@@ -20,7 +20,7 @@ public final class SyntaxTree {
         return _eofToken;
     }
 
-    public SyntaxTree(Iterable<String> errors, ExpressionSyntax root, SyntaxToken endOfFileToken) {
+    public SyntaxTree(Iterable<String> errors, ExpressionSyntaxNode root, SyntaxToken endOfFileToken) {
         this._errors = errors;
         this._root = root;
         this._eofToken = endOfFileToken;

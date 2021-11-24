@@ -5,10 +5,10 @@ import java.util.Arrays;
 /**
  * Represents syntax that performs an action on a 'left' and 'right' operand.
  */
-public final class BinaryExpressionSyntax extends ExpressionSyntax {
-    private final ExpressionSyntax _left;
+public final class BinaryExpressionSyntaxNode extends ExpressionSyntaxNode {
+    private final ExpressionSyntaxNode _left;
     private final SyntaxToken _operator;
-    private final ExpressionSyntax _right;
+    private final ExpressionSyntaxNode _right;
 
     @Override
     public SyntaxKind getKind() {
@@ -20,7 +20,7 @@ public final class BinaryExpressionSyntax extends ExpressionSyntax {
         return Arrays.asList(_left, _operator, _right);
     }
 
-    public ExpressionSyntax getLeft() {
+    public ExpressionSyntaxNode getLeft() {
         return _left;
     }
 
@@ -28,11 +28,11 @@ public final class BinaryExpressionSyntax extends ExpressionSyntax {
         return _operator;
     }
 
-    public ExpressionSyntax getRight() {
+    public ExpressionSyntaxNode getRight() {
         return _right;
     }
 
-    public BinaryExpressionSyntax(ExpressionSyntax left, SyntaxToken operator, ExpressionSyntax right) {
+    public BinaryExpressionSyntaxNode(ExpressionSyntaxNode left, SyntaxToken operator, ExpressionSyntaxNode right) {
         this._left = left;
         this._operator = operator;
         this._right = right;

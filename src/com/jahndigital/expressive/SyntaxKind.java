@@ -3,8 +3,9 @@ package com.jahndigital.expressive;
 /**
  * Used to easily reference the type of a SyntaxNode
  */
-enum SyntaxKind
+public enum SyntaxKind
 {
+    // Tokens
     NumberToken,
     WhitespaceToken,
     PlusToken,
@@ -16,7 +17,8 @@ enum SyntaxKind
     BadToken,
     EndOfFileToken,
 
+    // SyntaxNodes
     NumberExpression,
     BinaryExpression,
-    ParenthesisedExpression
+    UnaryExpression, ParenthesisedExpression
 }

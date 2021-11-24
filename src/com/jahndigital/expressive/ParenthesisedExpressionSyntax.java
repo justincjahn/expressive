@@ -5,16 +5,16 @@ import java.util.Arrays;
 /**
  * Represents parenthesised expressions, such as (1 + 2)
  */
-public final class ParenthesisedExpressionSyntax extends ExpressionSyntax {
+public final class ParenthesisedExpressionSyntax extends ExpressionSyntaxNode {
     private final SyntaxToken _openToken;
-    private final ExpressionSyntax _expression;
+    private final ExpressionSyntaxNode _expression;
     private final SyntaxToken _closeToken;
 
-    public ExpressionSyntax getExpression() {
+    public ExpressionSyntaxNode getExpression() {
         return _expression;
     }
 
-    public ParenthesisedExpressionSyntax(SyntaxToken openToken, ExpressionSyntax expression, SyntaxToken closeToken) {
+    public ParenthesisedExpressionSyntax(SyntaxToken openToken, ExpressionSyntaxNode expression, SyntaxToken closeToken) {
         this._openToken = openToken;
         this._expression = expression;
         this._closeToken = closeToken;
