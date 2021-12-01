@@ -46,14 +46,14 @@ public class Main {
                 }
 
                 if (binder.getErrors().iterator().hasNext()) {
-                    tree.getErrors().forEach(System.out::println);
+                    binder.getErrors().forEach(System.out::println);
                     continue;
                 }
 
                 Evaluator evaluator = new Evaluator(boundExpression);
 
                 try {
-                    int result = evaluator.evaluate();
+                    Object result = evaluator.evaluate();
                     System.out.println(result);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());

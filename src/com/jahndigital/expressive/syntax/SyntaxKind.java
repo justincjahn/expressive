@@ -17,6 +17,11 @@ public enum SyntaxKind
     BadToken,
     EndOfFileToken,
 
+    // Keywords and reserved words
+    KeywordToken,
+    FalseToken,
+    TrueToken,
+
     // SyntaxNodes
     LiteralExpression,
     BinaryExpression,

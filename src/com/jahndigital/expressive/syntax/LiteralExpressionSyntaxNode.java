@@ -8,12 +8,29 @@ import java.util.Arrays;
 public final class LiteralExpressionSyntaxNode extends ExpressionSyntaxNode {
     private final SyntaxToken _token;
 
+    private final Object _value;
+
     public SyntaxToken getToken() {
         return _token;
     }
 
+    public Object getValue()
+    {
+        if (_value == null) {
+            return getToken().getValue();
+        }
+
+        return _value;
+    }
+
     public LiteralExpressionSyntaxNode(SyntaxToken t) {
+        this(t, null);
+    }
+
+    public LiteralExpressionSyntaxNode(SyntaxToken t, Object value)
+    {
         _token = t;
+        _value = value;
     }
 
     @Override

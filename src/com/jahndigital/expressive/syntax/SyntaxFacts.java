@@ -41,4 +41,22 @@ final class SyntaxFacts
                 return 0;
         }
     }
+
+    /**
+     * Gets the SyntaxKind that represents the text provided, or returns {@link SyntaxKind#KeywordToken}.
+     *
+     * @param text The text to analyze.
+     * @return A {@link SyntaxKind} that represents the token provided.
+     */
+    public static SyntaxKind getKeywordKind(String text)
+    {
+        switch (text) {
+            case "true":
+                return SyntaxKind.TrueToken;
+            case "false":
+                return SyntaxKind.FalseToken;
+            default:
+                return SyntaxKind.KeywordToken;
+        }
+    }
 }

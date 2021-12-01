@@ -29,11 +29,11 @@ public final class Binder
     }
 
     private BoundExpression bindLiteralExpression(LiteralExpressionSyntaxNode syntax) {
-        int value = 0;
-        Object tokenValue = syntax.getToken().getValue();
+        Object value = 0;
 
-        if (tokenValue != null && tokenValue instanceof Integer) {
-            value = (int)tokenValue;
+        Object tokenValue = syntax.getValue();
+        if (tokenValue != null) {
+            value = tokenValue;
         }
 
         return new BoundLiteralExpression(value);
@@ -44,7 +44,7 @@ public final class Binder
         BoundUnaryOperatorKind boundOperator = bindUnaryOperatorKind(syntax.getOperator(), boundOperand.getType());
 
         if (boundOperator == null) {
-            _diagnostics.add(String.format("ERROR: Unary Operator %s is not defined for type %s.", syntax.getOperator(), boundOperand.getType()));
+            _diagnostics.add(String.format("ERROR: Unary Operator '%s' is not defined for type %s.", syntax.getOperator().getText(), boundOperand.getType()));
             return boundOperand;
         }
 
@@ -72,7 +72,7 @@ public final class Binder
         BoundBinaryOperatorKind boundOperator = bindBinaryOperatorKind(syntax.getOperator(), boundLeft.getType(), boundRight.getType());
 
         if (boundOperator == null) {
-            _diagnostics.add(String.format("ERROR: Unary Operator %s is not defined for types %s and %s.", syntax.getOperator(), boundLeft.getType(), boundRight.getType()));
+            _diagnostics.add(String.format("ERROR: Binary Operator '%s' is not defined for types %s and %s.", syntax.getOperator().getText(), boundLeft.getType(), boundRight.getType()));
             return boundLeft;
         }
 
@@ -82,7 +82,7 @@ public final class Binder
     private BoundBinaryOperatorKind bindBinaryOperatorKind(SyntaxToken operator, Type leftType, Type rightType) throws Exception {
         if (leftType != Integer.class || rightType != Integer.class) {
             return null;
-        }
+         }
 
         switch (operator.getKind()){
             case PlusToken:

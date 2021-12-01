@@ -20,7 +20,7 @@ final class Lexer {
     /**
      * Gets the character at the current position, or a null terminator if we've reached the end.
      */
-    protected char getCurrent() {
+    private char getCurrent() {
         if (_position >= _text.length()) {
             return '\0';
         }
@@ -82,6 +82,18 @@ final class Lexer {
 
             String text = _text.substring(start, _position);
             return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text, null);
+        }
+
+        if (Character.isLetter(getCurrent())) {
+            int start = _position;
+
+            while (Character.isLetter(getCurrent()) || Character.isDigit(getCurrent())) {
+                next();
+            }
+
+            String text = _text.substring(start, _position);
+            SyntaxKind kind = SyntaxFacts.getKeywordKind(text);
+            return new SyntaxToken(kind, start, text, null);
         }
 
         switch (getCurrent()) {

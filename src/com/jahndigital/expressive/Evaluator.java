@@ -13,18 +13,18 @@ public final class Evaluator {
         this._root = root;
     }
 
-    public int evaluate() throws Exception {
+    public Object evaluate() throws Exception {
         return evaluateExpression(_root);
     }
 
-    private int evaluateExpression(BoundExpression root) throws Exception {
+    private Object evaluateExpression(BoundExpression root) throws Exception {
         if (root instanceof BoundLiteralExpression) {
-            return (int) ((BoundLiteralExpression) root).getValue();
+            return ((BoundLiteralExpression) root).getValue();
         }
 
         if (root instanceof BoundUnaryExpression) {
             BoundUnaryExpression u = (BoundUnaryExpression)root;
-            int operand = evaluateExpression(u.getOperand());
+            int operand = (int)evaluateExpression(u.getOperand());
             BoundUnaryOperatorKind kind = u.getOperatorKind();
 
             switch (kind) {
@@ -39,8 +39,8 @@ public final class Evaluator {
 
         if (root instanceof BoundBinaryExpression) {
             BoundBinaryExpression b = (BoundBinaryExpression)root;
-            int left = evaluateExpression(b.getLeft());
-            int right = evaluateExpression(b.getRight());
+            int left = (int)evaluateExpression(b.getLeft());
+            int right = (int)evaluateExpression(b.getRight());
 
             BoundBinaryOperatorKind operation = b.getOperatorKind();
             switch (operation) {

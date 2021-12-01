@@ -174,14 +174,25 @@ final class Parser {
      */
     private ExpressionSyntaxNode parsePrimary() {
         SyntaxKind kind = getCurrent().getKind();
-        if (kind == SyntaxKind.OpenParenthesisToken) {
-            SyntaxToken left = nextToken();
-            ExpressionSyntaxNode expression = parseExpression();
-            SyntaxToken right = matchToken(SyntaxKind.CloseParenthesisToken);
-            return new ParenthesisedExpressionSyntax(left, expression, right);
-        }
 
-        SyntaxToken numberToken = matchToken(SyntaxKind.NumberToken);
-        return new LiteralExpressionSyntaxNode(numberToken);
+        switch (kind) {
+            case OpenParenthesisToken: {
+                SyntaxToken left = nextToken();
+                ExpressionSyntaxNode expression = parseExpression();
+                SyntaxToken right = matchToken(SyntaxKind.CloseParenthesisToken);
+                return new ParenthesisedExpressionSyntax(left, expression, right);
+            }
+
+            case TrueToken:
+            case FalseToken: {
+                boolean value = kind == SyntaxKind.TrueToken;
+                return new LiteralExpressionSyntaxNode(nextToken(), value);
+            }
+
+            default: {
+                SyntaxToken numberToken = matchToken(SyntaxKind.NumberToken);
+                return new LiteralExpressionSyntaxNode(numberToken);
+            }
+        }
     }
 }
