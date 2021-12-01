@@ -4,12 +4,12 @@ import java.lang.reflect.Type;
 
 public final class BoundUnaryExpression extends BoundExpression
 {
-    private final BoundUnaryOperatorKind _kind;
+    private final BoundUnaryOperator _operator;
     private final BoundExpression _operand;
 
     public BoundUnaryOperatorKind getOperatorKind()
     {
-        return _kind;
+        return _operator.getOperatorKind();
     }
 
     public BoundExpression getOperand()
@@ -17,9 +17,9 @@ public final class BoundUnaryExpression extends BoundExpression
         return _operand;
     }
 
-    public BoundUnaryExpression(BoundUnaryOperatorKind kind, BoundExpression operand)
+    public BoundUnaryExpression(BoundUnaryOperator operator, BoundExpression operand)
     {
-        this._kind = kind;
+        this._operator = operator;
         this._operand = operand;
     }
 

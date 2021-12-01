@@ -2,17 +2,31 @@ package com.jahndigital.expressive.binding;
 
 import com.jahndigital.expressive.syntax.*;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+/**
+ * Walks a {@link ExpressionSyntaxNode} and generates a typed tree used to evaluate expressions.
+ */
 public final class Binder
 {
+    /**
+     * A list of error messages that occurred when parsing the {@link ExpressionSyntaxNode}(s).
+     */
     private final ArrayList<String> _diagnostics = new ArrayList<>();
 
+    /**
+     * Gets a list of errors that occurred during binding.
+     */
     public Iterable<String> getErrors() {
         return _diagnostics;
     }
 
+    /**
+     * Generate a typed tree and return it.
+     *
+     * @param syntax The syntax node(s) to walk.
+     * @throws Exception If a fatal error occurred when walking or type checking.
+     */
     public BoundExpression bindExpression(ExpressionSyntaxNode syntax) throws Exception {
         switch (syntax.getKind()) {
             case LiteralExpression:
@@ -28,6 +42,11 @@ public final class Binder
         }
     }
 
+    /**
+     * Binds a token literal (E.g., true, 1, "hello")
+     *
+     * @param syntax The {@link SyntaxNode} to bind
+     */
     private BoundExpression bindLiteralExpression(LiteralExpressionSyntaxNode syntax) {
         Object value = 0;
 
@@ -39,9 +58,15 @@ public final class Binder
         return new BoundLiteralExpression(value);
     }
 
+    /**
+     * Binds a unary operation (E.g., -1)
+     *
+     * @param syntax The {@link SyntaxNode} to bind.
+     * @throws Exception If the unary operation was called on an incompatible type.
+     */
     private BoundExpression bindUnaryExpression(UnaryExpressionSyntaxNode syntax) throws Exception {
         BoundExpression boundOperand = bindExpression(syntax.getOperand());
-        BoundUnaryOperatorKind boundOperator = bindUnaryOperatorKind(syntax.getOperator(), boundOperand.getType());
+        BoundUnaryOperator boundOperator = BoundUnaryOperator.bind(syntax.getOperator().getKind(), boundOperand.getType());
 
         if (boundOperator == null) {
             _diagnostics.add(String.format("ERROR: Unary Operator '%s' is not defined for type %s.", syntax.getOperator().getText(), boundOperand.getType()));
@@ -51,33 +76,16 @@ public final class Binder
         return new BoundUnaryExpression(boundOperator, boundOperand);
     }
 
-    private BoundUnaryOperatorKind bindUnaryOperatorKind(SyntaxToken operator, Type operandType) throws Exception {
-        if (operandType == Integer.class) {
-            switch (operator.getKind()) {
-                case PlusToken:
-                    return BoundUnaryOperatorKind.Identity;
-                case MinusToken:
-                    return BoundUnaryOperatorKind.Negation;
-                default:
-                    throw new Exception(String.format("Unexpected unary operator kind %s", operator.getKind()));
-            }
-        }
-
-        if (operandType == Boolean.class) {
-            if (operator.getKind() == SyntaxKind.ExclamationPointToken) {
-                return BoundUnaryOperatorKind.LogicalNegation;
-            }
-
-            throw new Exception(String.format("Unexpected unary operator kind %s", operator.getKind()));
-        }
-
-        return null;
-    }
-
+    /**
+     * Binds a binary operaion (E.g, 1 + 1, true AND false)
+     *
+     * @param syntax The {@link SyntaxNode} to bind.
+     * @throws Exception If the binary operation was called on one or more incompatible types.
+     */
     private BoundExpression bindBinaryExpression(BinaryExpressionSyntaxNode syntax) throws Exception {
         BoundExpression boundLeft = bindExpression(syntax.getLeft());
         BoundExpression boundRight = bindExpression(syntax.getRight());
-        BoundBinaryOperatorKind boundOperator = bindBinaryOperatorKind(syntax.getOperator(), boundLeft.getType(), boundRight.getType());
+        BoundBinaryOperator boundOperator = BoundBinaryOperator.bind(syntax.getOperator().getKind(), boundLeft.getType(), boundRight.getType());
 
         if (boundOperator == null) {
             _diagnostics.add(String.format("ERROR: Binary Operator '%s' is not defined for types %s and %s.", syntax.getOperator().getText(), boundLeft.getType(), boundRight.getType()));
@@ -85,35 +93,5 @@ public final class Binder
         }
 
         return new BoundBinaryExpression(boundLeft, boundOperator, boundRight);
-    }
-
-    private BoundBinaryOperatorKind bindBinaryOperatorKind(SyntaxToken operator, Type leftType, Type rightType) throws Exception {
-        if (leftType == Integer.class && rightType == Integer.class) {
-            switch (operator.getKind()) {
-                case PlusToken:
-                    return BoundBinaryOperatorKind.Addition;
-                case MinusToken:
-                    return BoundBinaryOperatorKind.Subtraction;
-                case StarToken:
-                    return BoundBinaryOperatorKind.Multiplication;
-                case SlashToken:
-                    return BoundBinaryOperatorKind.Division;
-                default:
-                    throw new Exception(String.format("Unexpected binary operator kind %s", operator.getKind()));
-            }
-        }
-
-        if (leftType == Boolean.class && rightType == Boolean.class) {
-            switch (operator.getKind()) {
-                case AndToken:
-                    return BoundBinaryOperatorKind.LogicalAnd;
-                case OrToken:
-                    return BoundBinaryOperatorKind.LogicalOr;
-                default:
-                    throw new Exception(String.format("Unexpected binary operator kind %s", operator.getKind()));
-            }
-        }
-
-        return null;
     }
 }
