@@ -16,7 +16,8 @@ final class SyntaxFacts
         switch (kind) {
             case PlusToken:
             case MinusToken:
-                return 3;
+            case ExclamationPointToken:
+                return 10;
             default:
                 return 0;
         }
@@ -33,9 +34,13 @@ final class SyntaxFacts
         switch (kind) {
             case StarToken:
             case SlashToken:
-                return 2;
+                return 4;
             case PlusToken:
             case MinusToken:
+                return 3;
+            case AndToken:
+                return 2;
+            case OrToken:
                 return 1;
             default:
                 return 0;
@@ -50,11 +55,17 @@ final class SyntaxFacts
      */
     public static SyntaxKind getKeywordKind(String text)
     {
-        switch (text) {
+        switch (text.toLowerCase()) {
             case "true":
                 return SyntaxKind.TrueToken;
             case "false":
                 return SyntaxKind.FalseToken;
+            case "not":
+                return SyntaxKind.ExclamationPointToken;
+            case "and":
+                return SyntaxKind.AndToken;
+            case "or":
+                return SyntaxKind.OrToken;
             default:
                 return SyntaxKind.KeywordToken;
         }

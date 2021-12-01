@@ -1,7 +1,6 @@
 package com.jahndigital.expressive;
 
 import com.jahndigital.expressive.binding.*;
-import com.jahndigital.expressive.syntax.*;
 
 /**
  * Walks the AST and evaluates the expression into an integer.
@@ -24,14 +23,16 @@ public final class Evaluator {
 
         if (root instanceof BoundUnaryExpression) {
             BoundUnaryExpression u = (BoundUnaryExpression)root;
-            int operand = (int)evaluateExpression(u.getOperand());
+            Object operand = evaluateExpression(u.getOperand());
             BoundUnaryOperatorKind kind = u.getOperatorKind();
 
             switch (kind) {
                 case Identity:
                     return operand;
                 case Negation:
-                    return -operand;
+                    return -((int)operand);
+                case LogicalNegation:
+                    return !((boolean)operand);
                 default:
                     throw new Exception(String.format("Unexpected unary operator %s", kind));
             }
@@ -39,19 +40,23 @@ public final class Evaluator {
 
         if (root instanceof BoundBinaryExpression) {
             BoundBinaryExpression b = (BoundBinaryExpression)root;
-            int left = (int)evaluateExpression(b.getLeft());
-            int right = (int)evaluateExpression(b.getRight());
+            Object left = evaluateExpression(b.getLeft());
+            Object right = evaluateExpression(b.getRight());
 
             BoundBinaryOperatorKind operation = b.getOperatorKind();
             switch (operation) {
                 case Addition:
-                    return left + right;
+                    return (int)left + (int)right;
                 case Subtraction:
-                    return left - right;
+                    return (int)left - (int)right;
                 case Multiplication:
-                    return left * right;
+                    return (int)left * (int)right;
                 case Division:
-                    return left / right;
+                    return (int)left / (int)right;
+                case LogicalAnd:
+                    return (boolean)left && (boolean)right;
+                case LogicalOr:
+                    return (boolean)left || (boolean)right;
                 default:
                     throw new Exception(String.format("Unexpected binary operator %s", operation));
             }

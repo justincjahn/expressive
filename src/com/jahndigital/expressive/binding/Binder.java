@@ -52,18 +52,26 @@ public final class Binder
     }
 
     private BoundUnaryOperatorKind bindUnaryOperatorKind(SyntaxToken operator, Type operandType) throws Exception {
-        if (operandType != Integer.class) {
-            return null;
+        if (operandType == Integer.class) {
+            switch (operator.getKind()) {
+                case PlusToken:
+                    return BoundUnaryOperatorKind.Identity;
+                case MinusToken:
+                    return BoundUnaryOperatorKind.Negation;
+                default:
+                    throw new Exception(String.format("Unexpected unary operator kind %s", operator.getKind()));
+            }
         }
 
-        switch (operator.getKind()) {
-            case PlusToken:
-                return BoundUnaryOperatorKind.Identity;
-            case MinusToken:
-                return BoundUnaryOperatorKind.Negation;
-            default:
-                throw new Exception(String.format("Unexpected unary operator kind %s", operator.getKind()));
+        if (operandType == Boolean.class) {
+            if (operator.getKind() == SyntaxKind.ExclamationPointToken) {
+                return BoundUnaryOperatorKind.LogicalNegation;
+            }
+
+            throw new Exception(String.format("Unexpected unary operator kind %s", operator.getKind()));
         }
+
+        return null;
     }
 
     private BoundExpression bindBinaryExpression(BinaryExpressionSyntaxNode syntax) throws Exception {
@@ -80,21 +88,32 @@ public final class Binder
     }
 
     private BoundBinaryOperatorKind bindBinaryOperatorKind(SyntaxToken operator, Type leftType, Type rightType) throws Exception {
-        if (leftType != Integer.class || rightType != Integer.class) {
-            return null;
-         }
-
-        switch (operator.getKind()){
-            case PlusToken:
-                return BoundBinaryOperatorKind.Addition;
-            case MinusToken:
-                return BoundBinaryOperatorKind.Subtraction;
-            case StarToken:
-                return BoundBinaryOperatorKind.Multiplication;
-            case SlashToken:
-                return BoundBinaryOperatorKind.Division;
-            default:
-                throw new Exception(String.format("Unexpected binary operator kind %s", operator.getKind()));
+        if (leftType == Integer.class && rightType == Integer.class) {
+            switch (operator.getKind()) {
+                case PlusToken:
+                    return BoundBinaryOperatorKind.Addition;
+                case MinusToken:
+                    return BoundBinaryOperatorKind.Subtraction;
+                case StarToken:
+                    return BoundBinaryOperatorKind.Multiplication;
+                case SlashToken:
+                    return BoundBinaryOperatorKind.Division;
+                default:
+                    throw new Exception(String.format("Unexpected binary operator kind %s", operator.getKind()));
+            }
         }
+
+        if (leftType == Boolean.class && rightType == Boolean.class) {
+            switch (operator.getKind()) {
+                case AndToken:
+                    return BoundBinaryOperatorKind.LogicalAnd;
+                case OrToken:
+                    return BoundBinaryOperatorKind.LogicalOr;
+                default:
+                    throw new Exception(String.format("Unexpected binary operator kind %s", operator.getKind()));
+            }
+        }
+
+        return null;
     }
 }

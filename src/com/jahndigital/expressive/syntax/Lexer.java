@@ -17,15 +17,22 @@ final class Lexer {
         return _errors;
     }
 
+    private char peek(int offset)
+    {
+        int index = _position + offset;
+
+        if (index >= _text.length()) {
+            return '\0';
+        }
+
+        return _text.charAt(index);
+    }
+
     /**
      * Gets the character at the current position, or a null terminator if we've reached the end.
      */
     private char getCurrent() {
-        if (_position >= _text.length()) {
-            return '\0';
-        }
-
-        return _text.charAt(_position);
+        return peek(0);
     }
 
     /**
@@ -109,6 +116,24 @@ final class Lexer {
                 return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
             case ')':
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
+            case '!':
+                return new SyntaxToken(SyntaxKind.ExclamationPointToken, _position++, "!", null);
+            case '&':
+            {
+                if (peek(1) == '&') {
+                    return new SyntaxToken(SyntaxKind.AndToken, _position += 2, "&&", null);
+                }
+
+                break;
+            }
+            case '|':
+            {
+                if (peek(1) == '|') {
+                    return new SyntaxToken(SyntaxKind.OrToken, _position += 2, "||", null);
+                }
+
+                break;
+            }
         }
 
         _errors.add(String.format("ERROR: Bad character input '%s' at position %d.", getCurrent(), _position));
