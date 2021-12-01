@@ -12,5 +12,5 @@ public enum BoundBinaryOperatorKind
 
     // Logic
     LogicalAnd,
-    LogicalOr
+    Equals, NotEquals, LogicalOr
 }

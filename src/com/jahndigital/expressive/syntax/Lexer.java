@@ -116,8 +116,6 @@ final class Lexer {
                 return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
             case ')':
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
-            case '!':
-                return new SyntaxToken(SyntaxKind.ExclamationPointToken, _position++, "!", null);
             case '&':
             {
                 if (peek(1) == '&') {
@@ -133,6 +131,20 @@ final class Lexer {
                 }
 
                 break;
+            }
+            case '=': {
+                if (peek(1) == '=') {
+                    return new SyntaxToken(SyntaxKind.EqualityToken, _position += 2, "==", null);
+                }
+
+                break;
+            }
+            case '!': {
+                if (peek(1) == '=') {
+                    return new SyntaxToken(SyntaxKind.NegatedEqualityToken, _position += 2, "!=", null);
+                } else {
+                    return new SyntaxToken(SyntaxKind.ExclamationPointToken, _position++, "!", null);
+                }
             }
         }
 

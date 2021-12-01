@@ -34,9 +34,12 @@ final class SyntaxFacts
         switch (kind) {
             case StarToken:
             case SlashToken:
-                return 4;
+                return 5;
             case PlusToken:
             case MinusToken:
+                return 4;
+            case EqualityToken:
+            case NegatedEqualityToken:
                 return 3;
             case AndToken:
                 return 2;

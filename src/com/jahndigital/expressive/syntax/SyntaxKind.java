@@ -31,5 +31,5 @@ public enum SyntaxKind
     LiteralExpression,
     BinaryExpression,
     UnaryExpression,
-    ParenthesisedExpression
+    EqualityToken, NegatedEqualityToken, ParenthesisedExpression
 }

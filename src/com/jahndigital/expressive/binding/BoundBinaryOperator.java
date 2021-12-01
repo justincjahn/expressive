@@ -68,6 +68,18 @@ public final class BoundBinaryOperator {
     }
 
     /**
+     *
+     * @param syntaxKind The SyntaxKind object that represents this operation.
+     * @param operatorKind Gets the type-inspected operation. (E.g. a '+' between two integers is {@link BoundBinaryOperatorKind#Addition}.
+     * @param operandsType The type of the left and right operand.
+     * @param resultType The type of the evaluated result.
+     */
+    private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind operatorKind, Type operandsType, Type resultType)
+    {
+        this(syntaxKind, operatorKind, operandsType, operandsType, resultType);
+    }
+
+    /**
      * Init
      *
      * @param syntaxKind The SyntaxKind object that represents this operation.
@@ -96,7 +108,12 @@ public final class BoundBinaryOperator {
 
             // Logical
             new BoundBinaryOperator(SyntaxKind.AndToken, BoundBinaryOperatorKind.LogicalAnd, Boolean.class),
-            new BoundBinaryOperator(SyntaxKind.OrToken, BoundBinaryOperatorKind.LogicalOr, Boolean.class)
+            new BoundBinaryOperator(SyntaxKind.OrToken, BoundBinaryOperatorKind.LogicalOr, Boolean.class),
+            new BoundBinaryOperator(SyntaxKind.EqualityToken, BoundBinaryOperatorKind.Equals, Boolean.class),
+            new BoundBinaryOperator(SyntaxKind.NegatedEqualityToken, BoundBinaryOperatorKind.NotEquals, Boolean.class),
+
+            new BoundBinaryOperator(SyntaxKind.EqualityToken, BoundBinaryOperatorKind.Equals, Integer.class, Boolean.class),
+            new BoundBinaryOperator(SyntaxKind.NegatedEqualityToken, BoundBinaryOperatorKind.NotEquals, Integer.class, Boolean.class)
     };
 
     /**
