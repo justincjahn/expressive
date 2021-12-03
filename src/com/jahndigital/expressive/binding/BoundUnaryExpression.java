@@ -2,22 +2,37 @@ package com.jahndigital.expressive.binding;
 
 import java.lang.reflect.Type;
 
+/**
+ * Represents a typed version of {@link com.jahndigital.expressive.syntax.UnaryExpressionSyntaxNode}.
+ */
 public final class BoundUnaryExpression extends BoundExpression
 {
-    private final BoundUnaryOperator _operator;
+    private final BoundUnaryOperation _operator;
     private final BoundExpression _operand;
 
-    public BoundUnaryOperatorKind getOperatorKind()
+    /**
+     * Gets the {@link BoundUnaryOperationKind} of this expression.
+     */
+    public BoundUnaryOperationKind getOperatorKind()
     {
         return _operator.getOperatorKind();
     }
 
+    /**
+     * Gets the operand (right side) of this operation.
+     */
     public BoundExpression getOperand()
     {
         return _operand;
     }
 
-    public BoundUnaryExpression(BoundUnaryOperator operator, BoundExpression operand)
+    /**
+     * Init
+     *
+     * @param operator The unary operator
+     * @param operand The operand (right side) of the operation.
+     */
+    public BoundUnaryExpression(BoundUnaryOperation operator, BoundExpression operand)
     {
         this._operator = operator;
         this._operand = operand;
@@ -33,4 +48,3 @@ public final class BoundUnaryExpression extends BoundExpression
         return BoundNodeKind.UnaryExpression;
     }
 }
-

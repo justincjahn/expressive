@@ -1,7 +1,7 @@
 package com.jahndigital.expressive.syntax;
 
 /**
- * Used to easily reference the type of a SyntaxNode
+ * Represents possible types of {@link SyntaxNode}s.
  */
 public enum SyntaxKind
 {

@@ -1,24 +1,40 @@
 package com.jahndigital.expressive.binding;
 
+import com.jahndigital.expressive.DiagnosticRepository;
 import com.jahndigital.expressive.syntax.*;
 
-import java.util.ArrayList;
-
 /**
- * Walks a {@link ExpressionSyntaxNode} and generates a typed tree used to evaluate expressions.
+ * Walks a {@link ExpressionSyntaxNode} and generates a type-safe tree of {@link BoundExpression} objects that can be evaluated.
  */
-public final class Binder
+final class Binder
 {
     /**
      * A list of error messages that occurred when parsing the {@link ExpressionSyntaxNode}(s).
      */
-    private final ArrayList<String> _diagnostics = new ArrayList<>();
+    private final DiagnosticRepository _diagnostics;
 
     /**
-     * Gets a list of errors that occurred during binding.
+     * Init
+     *
+     * @param diagnostics The repository to use when reporting issues with binding.
      */
-    public Iterable<String> getErrors() {
-        return _diagnostics;
+    Binder(DiagnosticRepository diagnostics)
+    {
+        _diagnostics = diagnostics;
+    }
+
+    /**
+     * Bind to the provided SyntaxTree and return a {@link BoundSyntaxTree}.
+     */
+    BoundSyntaxTree bind(SyntaxTree tree)
+    {
+        try {
+            BoundExpression bound = bindExpression(tree.getRoot());
+            return new BoundSyntaxTree(_diagnostics, bound);
+        } catch (Exception e) {
+            _diagnostics.addException(e);
+            return new BoundSyntaxTree(_diagnostics, null);
+        }
     }
 
     /**
@@ -27,7 +43,7 @@ public final class Binder
      * @param syntax The syntax node(s) to walk.
      * @throws Exception If a fatal error occurred when walking or type checking.
      */
-    public BoundExpression bindExpression(ExpressionSyntaxNode syntax) throws Exception {
+    private BoundExpression bindExpression(ExpressionSyntaxNode syntax) throws Exception {
         switch (syntax.getKind()) {
             case LiteralExpression:
                 return bindLiteralExpression((LiteralExpressionSyntaxNode)syntax);
@@ -66,10 +82,10 @@ public final class Binder
      */
     private BoundExpression bindUnaryExpression(UnaryExpressionSyntaxNode syntax) throws Exception {
         BoundExpression boundOperand = bindExpression(syntax.getOperand());
-        BoundUnaryOperator boundOperator = BoundUnaryOperator.bind(syntax.getOperator().getKind(), boundOperand.getType());
+        BoundUnaryOperation boundOperator = BoundUnaryOperation.bind(syntax.getOperator().getKind(), boundOperand.getType());
 
         if (boundOperator == null) {
-            _diagnostics.add(String.format("ERROR: Unary Operator '%s' is not defined for type %s.", syntax.getOperator().getText(), boundOperand.getType()));
+            _diagnostics.addInvalidUnaryOperator(syntax, boundOperand);
             return boundOperand;
         }
 
@@ -77,7 +93,7 @@ public final class Binder
     }
 
     /**
-     * Binds a binary operaion (E.g, 1 + 1, true AND false)
+     * Binds a binary operation (E.g, 1 + 1, true AND false)
      *
      * @param syntax The {@link SyntaxNode} to bind.
      * @throws Exception If the binary operation was called on one or more incompatible types.
@@ -85,10 +101,10 @@ public final class Binder
     private BoundExpression bindBinaryExpression(BinaryExpressionSyntaxNode syntax) throws Exception {
         BoundExpression boundLeft = bindExpression(syntax.getLeft());
         BoundExpression boundRight = bindExpression(syntax.getRight());
-        BoundBinaryOperator boundOperator = BoundBinaryOperator.bind(syntax.getOperator().getKind(), boundLeft.getType(), boundRight.getType());
+        BoundBinaryOperation boundOperator = BoundBinaryOperation.bind(syntax.getOperator().getKind(), boundLeft.getType(), boundRight.getType());
 
         if (boundOperator == null) {
-            _diagnostics.add(String.format("ERROR: Binary Operator '%s' is not defined for types %s and %s.", syntax.getOperator().getText(), boundLeft.getType(), boundRight.getType()));
+            _diagnostics.addInvalidBinaryOperation(syntax, boundLeft, boundRight);
             return boundLeft;
         }
 

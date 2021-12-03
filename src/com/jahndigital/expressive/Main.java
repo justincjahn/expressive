@@ -1,9 +1,6 @@
 package com.jahndigital.expressive;
 
-import com.jahndigital.expressive.binding.Binder;
-import com.jahndigital.expressive.binding.BoundExpression;
-import com.jahndigital.expressive.syntax.ExpressionSyntaxNode;
-import com.jahndigital.expressive.syntax.SyntaxNode;
+import com.jahndigital.expressive.binding.BoundSyntaxTree;
 import com.jahndigital.expressive.syntax.SyntaxTree;
 
 import java.util.*;
@@ -30,28 +27,26 @@ public class Main {
             SyntaxTree tree = SyntaxTree.parse(line);
 
             if (showTree) {
-                SyntaxNode.pprint(tree.getRoot());
+                tree.pprint();
             }
 
-            if (tree.getErrors().iterator().hasNext()) {
-                tree.getErrors().forEach(System.out::println);
+            BoundSyntaxTree boundTree;
+            if (tree.getDiagnostics().iterator().hasNext()) {
+                tree.getDiagnostics().forEach(System.out::println);
             } else {
-                Binder binder = new Binder();
-                BoundExpression boundExpression = null;
-
                 try {
-                    boundExpression = binder.bindExpression(tree.getRoot());
+                    boundTree = tree.bind();
+
+                    if (boundTree.getDiagnostics().iterator().hasNext()) {
+                        boundTree.getDiagnostics().forEach(System.out::println);
+                        continue;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-
-                if (binder.getErrors().iterator().hasNext()) {
-                    binder.getErrors().forEach(System.out::println);
                     continue;
                 }
 
-                Evaluator evaluator = new Evaluator(boundExpression);
-
+                Evaluator evaluator = new Evaluator(boundTree.getRoot());
                 try {
                     Object result = evaluator.evaluate();
                     System.out.println(result);
@@ -62,5 +57,3 @@ public class Main {
         }
     }
 }
-
-

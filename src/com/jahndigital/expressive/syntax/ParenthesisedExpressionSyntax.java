@@ -10,10 +10,16 @@ public final class ParenthesisedExpressionSyntax extends ExpressionSyntaxNode {
     private final ExpressionSyntaxNode _expression;
     private final SyntaxToken _closeToken;
 
+    /**
+     * Get the expression within the parenthesis.
+     */
     public ExpressionSyntaxNode getExpression() {
         return _expression;
     }
 
+    /**
+     * Init
+     */
     public ParenthesisedExpressionSyntax(SyntaxToken openToken, ExpressionSyntaxNode expression, SyntaxToken closeToken) {
         this._openToken = openToken;
         this._expression = expression;

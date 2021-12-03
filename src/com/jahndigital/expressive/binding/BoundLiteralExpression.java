@@ -3,10 +3,10 @@ package com.jahndigital.expressive.binding;
 import java.lang.reflect.Type;
 
 /**
- * Represents a token literal in a typed syntax tree.
+ * Represents a typed version of a {@link com.jahndigital.expressive.syntax.LiteralExpressionSyntaxNode}.
  */
 public final class BoundLiteralExpression extends BoundExpression {
-    private Object _value;
+    private final Object _value;
 
     /**
      * Get the raw value of the expression.
@@ -21,7 +21,7 @@ public final class BoundLiteralExpression extends BoundExpression {
      *
      * @param value The raw value of the literal.
      */
-    public BoundLiteralExpression(Object value)
+    BoundLiteralExpression(Object value)
     {
         _value = value;
     }
@@ -36,4 +36,3 @@ public final class BoundLiteralExpression extends BoundExpression {
         return BoundNodeKind.LiteralExpression;
     }
 }
-

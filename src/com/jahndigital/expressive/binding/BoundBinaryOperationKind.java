@@ -3,7 +3,7 @@ package com.jahndigital.expressive.binding;
 /**
  * Values that represent possible type-inferenced binary operations.
  */
-public enum BoundBinaryOperatorKind
+public enum BoundBinaryOperationKind
 {
     Addition,
     Subtraction,
@@ -12,5 +12,7 @@ public enum BoundBinaryOperatorKind
 
     // Logic
     LogicalAnd,
-    Equals, NotEquals, LogicalOr
+    LogicalOr,
+    Equals,
+    NotEquals
 }

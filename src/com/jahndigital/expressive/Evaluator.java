@@ -24,7 +24,7 @@ public final class Evaluator {
         if (root instanceof BoundUnaryExpression) {
             BoundUnaryExpression u = (BoundUnaryExpression)root;
             Object operand = evaluateExpression(u.getOperand());
-            BoundUnaryOperatorKind kind = u.getOperatorKind();
+            BoundUnaryOperationKind kind = u.getOperatorKind();
 
             switch (kind) {
                 case Identity:
@@ -43,7 +43,7 @@ public final class Evaluator {
             Object left = evaluateExpression(b.getLeft());
             Object right = evaluateExpression(b.getRight());
 
-            BoundBinaryOperatorKind operation = b.getOperatorKind();
+            BoundBinaryOperationKind operation = b.getOperatorKind();
             switch (operation) {
                 case Addition:
                     return (int)left + (int)right;
@@ -65,11 +65,6 @@ public final class Evaluator {
                     throw new Exception(String.format("Unexpected binary operator %s", operation));
             }
         }
-
-//        if (root instanceof ParenthesisedExpressionSyntax) {
-//            ParenthesisedExpressionSyntax p = (ParenthesisedExpressionSyntax) root;
-//            return evaluateExpression(p.getExpression());
-//        }
 
         return 0;
     }

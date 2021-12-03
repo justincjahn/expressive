@@ -3,12 +3,12 @@ package com.jahndigital.expressive.binding;
 import java.lang.reflect.Type;
 
 /**
- * Represents a type-inferenced binary operation.
+ * Represents a typed version of a {@link com.jahndigital.expressive.syntax.BinaryExpressionSyntaxNode}.
  */
 public final class BoundBinaryExpression extends BoundExpression
 {
     private final BoundExpression _left;
-    private final BoundBinaryOperator _operator;
+    private final BoundBinaryOperation _operator;
     private final BoundExpression _right;
 
     /**
@@ -22,7 +22,7 @@ public final class BoundBinaryExpression extends BoundExpression
     /**
      * Gets the kind of operation that should occur.
      */
-    public BoundBinaryOperatorKind getOperatorKind()
+    public BoundBinaryOperationKind getOperatorKind()
     {
         return _operator.getOperatorKind();
     }
@@ -42,7 +42,7 @@ public final class BoundBinaryExpression extends BoundExpression
      * @param operator The kind of operation that should occur.
      * @param right The right side of the operation.
      */
-    public BoundBinaryExpression(BoundExpression left, BoundBinaryOperator operator, BoundExpression right)
+    BoundBinaryExpression(BoundExpression left, BoundBinaryOperation operator, BoundExpression right)
     {
         this._left = left;
         this._operator = operator;

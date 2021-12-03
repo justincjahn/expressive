@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Represents a generic element of an Abstract Syntax Tree (AST)
+ * Represents a generic element of a syntax tree.
  */
 public abstract class SyntaxNode {
     public abstract SyntaxKind getKind();
@@ -12,13 +12,21 @@ public abstract class SyntaxNode {
 
     /**
      * Pretty prints a SyntaxNode
-     * @param node
+     *
+     * @param node The SyntaxNode to print.
      */
     public static void pprint(SyntaxNode node)
     {
         pprint(node, "", true);
     }
 
+    /**
+     * Recursive method to pretty print.
+     *
+     * @param node The SyntaxNode to print.
+     * @param indent The string to use for indentation.
+     * @param isLast If the node is the last in the tree.
+     */
     private static void pprint(SyntaxNode node, String indent, boolean isLast)
     {
         String marker = isLast ? "└──" : "├──";

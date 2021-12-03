@@ -4,12 +4,12 @@ import com.jahndigital.expressive.syntax.SyntaxKind;
 import java.lang.reflect.Type;
 
 /**
- * Represents a typed version of a {@link com.jahndigital.expressive.syntax.UnaryExpressionSyntaxNode}.  If an incompatible
- * type is found in a unary operation, the error handler may decide what to do.
+ * An instance of this object represents a typed unary operation. If an incompatible type is found in the operand, the
+ * error handler may decide what to do.
  */
-final class BoundUnaryOperator {
+final class BoundUnaryOperation {
     private final SyntaxKind _syntaxKind;
-    private final BoundUnaryOperatorKind _operatorKind;
+    private final BoundUnaryOperationKind _operatorKind;
     private final Type _operandType;
     private final Type _resultType;
 
@@ -22,9 +22,9 @@ final class BoundUnaryOperator {
     }
 
     /**
-     * Gets the type-inspected operation. (E.g. a '-' on an integer is {@link BoundUnaryOperatorKind#Negation}).
+     * Gets the type-inspected operation. (E.g. a '-' on an integer is {@link BoundUnaryOperationKind#Negation}).
      */
-    public BoundUnaryOperatorKind getOperatorKind()
+    public BoundUnaryOperationKind getOperatorKind()
     {
         return _operatorKind;
     }
@@ -49,10 +49,10 @@ final class BoundUnaryOperator {
      * Init
      *
      * @param syntaxKind The SyntaxKind object that represents this operation.
-     * @param operatorKind The type-inspected operation. (E.g. a '-' on an integer is {@link BoundUnaryOperatorKind#Negation}).
+     * @param operatorKind The type-inspected operation. (E.g. a '-' on an integer is {@link BoundUnaryOperationKind#Negation}).
      * @param operandType The type of the operand and the result of the evaluation.
      */
-    private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind operatorKind, Type operandType)
+    private BoundUnaryOperation(SyntaxKind syntaxKind, BoundUnaryOperationKind operatorKind, Type operandType)
     {
         this(syntaxKind, operatorKind, operandType, operandType);
     }
@@ -61,11 +61,11 @@ final class BoundUnaryOperator {
      * Init
      *
      * @param syntaxKind The SyntaxKind object that represents this operation.
-     * @param operatorKind The type-inspected operation. (E.g. a '-' on an integer is {@link BoundUnaryOperatorKind#Negation}).
+     * @param operatorKind The type-inspected operation. (E.g. a '-' on an integer is {@link BoundUnaryOperationKind#Negation}).
      * @param operandType The type of the operand.
      * @param resultType The type of the resulting operation.
      */
-    private BoundUnaryOperator(SyntaxKind syntaxKind, BoundUnaryOperatorKind operatorKind, Type operandType, Type resultType)
+    private BoundUnaryOperation(SyntaxKind syntaxKind, BoundUnaryOperationKind operatorKind, Type operandType, Type resultType)
     {
         this._syntaxKind = syntaxKind;
         this._operatorKind = operatorKind;
@@ -76,24 +76,24 @@ final class BoundUnaryOperator {
     /**
      * An array that lists all the possible permutations of unary operations in the language.
      */
-    private static BoundUnaryOperator[] _operators = {
-        new BoundUnaryOperator(SyntaxKind.PlusToken, BoundUnaryOperatorKind.Identity, Integer.class),
-        new BoundUnaryOperator(SyntaxKind.MinusToken, BoundUnaryOperatorKind.Negation, Integer.class),
+    private static final BoundUnaryOperation[] _operators = {
+        new BoundUnaryOperation(SyntaxKind.PlusToken, BoundUnaryOperationKind.Identity, Integer.class),
+        new BoundUnaryOperation(SyntaxKind.MinusToken, BoundUnaryOperationKind.Negation, Integer.class),
 
         // Logical
-        new BoundUnaryOperator(SyntaxKind.ExclamationPointToken, BoundUnaryOperatorKind.LogicalNegation, Boolean.class)
+        new BoundUnaryOperation(SyntaxKind.ExclamationPointToken, BoundUnaryOperationKind.LogicalNegation, Boolean.class)
     };
 
     /**
-     * Returns a {@link BoundUnaryOperator} if a compatible one is found based on the provided {@link SyntaxKind} and type.
+     * Returns a {@link BoundUnaryOperation} if a compatible one is found based on the provided {@link SyntaxKind} and type.
      *
      * @param kind The SyntaxKind that represents the operation.
      * @param operandType The type of the operand.
      * @return A compatible operation or null if one wasn't found.
      */
-    public static BoundUnaryOperator bind(SyntaxKind kind, Type operandType)
+    public static BoundUnaryOperation bind(SyntaxKind kind, Type operandType)
     {
-        for (BoundUnaryOperator op : _operators) {
+        for (BoundUnaryOperation op : _operators) {
             if (op.getSyntaxKind() == kind && op.getOperandType() == operandType) {
                 return op;
             }
