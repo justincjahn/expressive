@@ -30,13 +30,16 @@ public class Main {
                 tree.pprint();
             }
 
-            BoundSyntaxTree boundTree;
+            // Print parsing diagnostics if available
             if (tree.getDiagnostics().iterator().hasNext()) {
                 tree.getDiagnostics().forEach(System.out::println);
             } else {
+                BoundSyntaxTree boundTree;
+
                 try {
                     boundTree = tree.bind();
 
+                    // Print binding diagnostics if available
                     if (boundTree.getDiagnostics().iterator().hasNext()) {
                         boundTree.getDiagnostics().forEach(System.out::println);
                         continue;
@@ -46,9 +49,9 @@ public class Main {
                     continue;
                 }
 
-                Evaluator evaluator = new Evaluator(boundTree.getRoot());
+                // Evaluate
                 try {
-                    Object result = evaluator.evaluate();
+                    Object result = boundTree.evaluate();
                     System.out.println(result);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());

@@ -1,9 +1,13 @@
 package com.jahndigital.expressive.binding;
 
 import com.jahndigital.expressive.Diagnostic;
+import com.jahndigital.expressive.DiagnosticLevel;
 import com.jahndigital.expressive.DiagnosticRepository;
+import com.jahndigital.expressive.Evaluator;
 import com.jahndigital.expressive.syntax.SyntaxTree;
-import com.sun.istack.internal.Nullable;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a typed version of a {@link SyntaxTree}.
@@ -26,9 +30,9 @@ public final class BoundSyntaxTree {
     /**
      * Gets a list of diagnostic information from the lexing, parsing, and binding process.
      */
-    public Iterable<Diagnostic> getDiagnostics()
+    public List<Diagnostic> getDiagnostics()
     {
-        return _diagnostics;
+        return _diagnostics.asReadOnly();
     }
 
     /**
@@ -36,10 +40,36 @@ public final class BoundSyntaxTree {
      *
      * @return A {@link BoundExpression} or {@link null}.
      */
-    @Nullable
     public BoundExpression getRoot()
     {
         return _root;
+    }
+
+    /**
+     * Evaluates this bound syntax tree.
+     *
+     * @return The result of the evaluation.
+     * @throws Exception If an unrecoverable error occurred during evaluation or there were errors during parsing.
+     */
+    public Object evaluate() throws Exception
+    {
+        List<Diagnostic> errors = getDiagnostics()
+                .stream()
+                .filter(x -> x.getLevel() == DiagnosticLevel.ERROR || x.getLevel() == DiagnosticLevel.CRIT)
+                .collect(Collectors.toList());
+
+        if (!errors.isEmpty()) {
+            throw new Exception(
+                    String.format("Unable to evaluate expression: %d errors encountered during parsing.", errors.size())
+            );
+        }
+
+        if (getRoot() == null) {
+            return null;
+        }
+
+        Evaluator evaluator = new Evaluator(getRoot());
+        return evaluator.evaluate();
     }
 
     /**
