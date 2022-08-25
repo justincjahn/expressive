@@ -1,6 +1,9 @@
 package com.jahndigital.expressive;
 
 import com.jahndigital.expressive.binding.*;
+import com.sun.javaws.exceptions.InvalidArgumentException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Walks the AST and evaluates the expression into an integer.
@@ -13,7 +16,8 @@ public final class Evaluator {
      *
      * @param root The {@link BoundNode} that will be evaluated.
      */
-    public Evaluator(BoundExpression root) {
+    public Evaluator(BoundExpression root)
+    {
         this._root = root;
     }
 
@@ -22,7 +26,8 @@ public final class Evaluator {
      *
      * @throws Exception If an unrecoverable error was encountered during evaluation.
      */
-    public Object evaluate() throws Exception {
+    public Object evaluate() throws Exception
+    {
         return evaluateExpression(_root);
     }
 
@@ -33,7 +38,8 @@ public final class Evaluator {
      * @return The result of the evaluation.
      * @throws Exception If an unrecoverable error was encountered during evaluation.
      */
-    private Object evaluateExpression(BoundExpression root) throws Exception {
+    private Object evaluateExpression(BoundExpression root) throws Exception
+    {
         if (root instanceof BoundLiteralExpression) {
             return ((BoundLiteralExpression) root).getValue();
         }
@@ -47,7 +53,7 @@ public final class Evaluator {
                 case Identity:
                     return operand;
                 case Negation:
-                    return -((int)operand);
+                    return _negate(operand);
                 case LogicalNegation:
                     return !((boolean)operand);
                 default:
@@ -63,13 +69,13 @@ public final class Evaluator {
             BoundBinaryOperationKind operation = b.getOperatorKind();
             switch (operation) {
                 case Addition:
-                    return (int)left + (int)right;
+                    return _evaluateAddition(left, right);
                 case Subtraction:
-                    return (int)left - (int)right;
+                    return _evaluateSubtraction(left, right);
                 case Multiplication:
-                    return (int)left * (int)right;
+                    return _evaluateMultiplication(left, right);
                 case Division:
-                    return (int)left / (int)right;
+                    return _evaluateDivision(left, right);
                 case LogicalAnd:
                     return (boolean)left && (boolean)right;
                 case LogicalOr:
@@ -84,5 +90,73 @@ public final class Evaluator {
         }
 
         return 0;
+    }
+
+    private static Object _negate(Object num) throws Exception
+    {
+        if (num instanceof Integer) {
+            return -((int)num);
+        }
+
+        if (num instanceof BigDecimal) {
+            return ((BigDecimal)num).negate();
+        }
+
+        // Shouldn't ever get here
+        throw new Exception("Only numbers and decimal values can be negated.");
+    }
+
+    private static BigDecimal _getNumberAsDecimal(Object num) throws Exception
+    {
+        if (num instanceof BigDecimal) {
+            return (BigDecimal)num;
+        }
+
+        if (num instanceof Integer) {
+            return new BigDecimal((int)num);
+        }
+
+        throw new InvalidArgumentException(new String[] { "num", "Object provided must either be a decimal or an integer." });
+    }
+
+    private static BigDecimal[] _getNumbersAsDecimal(Object left, Object right) throws Exception
+    {
+        return new BigDecimal[] { _getNumberAsDecimal(left), _getNumberAsDecimal(right) };
+    }
+
+    private static Object _evaluateAddition(Object left, Object right) throws Exception
+    {
+        if (left instanceof Integer && right instanceof Integer) {
+            return (int)left + (int)right;
+        }
+
+        BigDecimal[] values = _getNumbersAsDecimal(left, right);
+        return values[0].add(values[1]);
+    }
+
+    private static Object _evaluateSubtraction(Object left, Object right) throws Exception
+    {
+        if (left instanceof Integer && right instanceof Integer) {
+            return (int)left - (int)right;
+        }
+
+        BigDecimal[] values = _getNumbersAsDecimal(left, right);
+        return values[0].subtract(values[1]);
+    }
+
+    private static Object _evaluateMultiplication(Object left, Object right) throws Exception
+    {
+        if (left instanceof Integer && right instanceof Integer) {
+            return (int)left * (int)right;
+        }
+
+        BigDecimal[] values = _getNumbersAsDecimal(left, right);
+        return values[0].multiply(values[1]);
+    }
+
+    private static Object _evaluateDivision(Object left, Object right) throws Exception
+    {
+        BigDecimal[] values = _getNumbersAsDecimal(left, right);
+        return values[0].divide(values[1], RoundingMode.HALF_EVEN);
     }
 }

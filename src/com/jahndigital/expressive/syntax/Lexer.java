@@ -2,10 +2,13 @@ package com.jahndigital.expressive.syntax;
 
 import com.jahndigital.expressive.DiagnosticRepository;
 
+import java.math.BigDecimal;
+
 /**
  * Reads the provided text string and converts it into tokens.
  */
-final class Lexer {
+final class Lexer
+{
     private final DiagnosticRepository _diagnostics;
     private final String _text;
     private int _position = 0;
@@ -30,7 +33,8 @@ final class Lexer {
     /**
      * Gets the character at the current position, or a null terminator if we've reached the end.
      */
-    private char getCurrent() {
+    private char getCurrent()
+    {
         return peek(0);
     }
 
@@ -48,7 +52,8 @@ final class Lexer {
     /**
      * Increments the position forward by one.
      */
-    private void next() {
+    private void next()
+    {
         _position++;
     }
 
@@ -57,19 +62,38 @@ final class Lexer {
      *
      * @return The next token in the text, or an EndOfFileToken.
      */
-    SyntaxToken nextToken() {
+    SyntaxToken nextToken()
+    {
         if (_position >= _text.length()) {
             return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0", null);
         }
 
         if (Character.isDigit(getCurrent())) {
             int start = _position;
+            int numPeriods = 0;
 
-            while (Character.isDigit(getCurrent())) {
+            while (Character.isDigit(getCurrent()) || getCurrent() == '.') {
+                if (getCurrent() == '.')
+                {
+                    numPeriods++;
+                }
+
                 next();
             }
 
             String text = _text.substring(start, _position);
+
+            if (numPeriods > 0) {
+                BigDecimal num = null;
+
+                try {
+                    num = new BigDecimal(text);
+                } catch (NumberFormatException e) {
+                    _diagnostics.addInvalidCastToDecimal(_text, _position);
+                }
+
+                return new SyntaxToken(SyntaxKind.NumberToken, start, text, num);
+            }
 
             Integer num = null;
             try {

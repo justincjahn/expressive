@@ -2,6 +2,7 @@ package com.jahndigital.expressive.binding;
 
 import com.jahndigital.expressive.syntax.SyntaxKind;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 
 /**
  * An instance of this object represents a typed unary operation. If an incompatible type is found in the operand, the
@@ -79,6 +80,10 @@ final class BoundUnaryOperation {
     private static final BoundUnaryOperation[] _operators = {
         new BoundUnaryOperation(SyntaxKind.PlusToken, BoundUnaryOperationKind.Identity, Integer.class),
         new BoundUnaryOperation(SyntaxKind.MinusToken, BoundUnaryOperationKind.Negation, Integer.class),
+
+        // BigDecimal
+        new BoundUnaryOperation(SyntaxKind.PlusToken, BoundUnaryOperationKind.Identity, BigDecimal.class),
+        new BoundUnaryOperation(SyntaxKind.MinusToken, BoundUnaryOperationKind.Negation, BigDecimal.class),
 
         // Logical
         new BoundUnaryOperation(SyntaxKind.ExclamationPointToken, BoundUnaryOperationKind.LogicalNegation, Boolean.class)

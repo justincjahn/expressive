@@ -43,7 +43,8 @@ final class Binder
      * @param syntax The syntax node(s) to walk.
      * @throws Exception If a fatal error occurred when walking or type checking.
      */
-    private BoundExpression bindExpression(ExpressionSyntaxNode syntax) throws Exception {
+    private BoundExpression bindExpression(ExpressionSyntaxNode syntax) throws Exception
+    {
         switch (syntax.getKind()) {
             case LiteralExpression:
                 return bindLiteralExpression((LiteralExpressionSyntaxNode)syntax);
@@ -63,7 +64,8 @@ final class Binder
      *
      * @param syntax The {@link SyntaxNode} to bind
      */
-    private BoundExpression bindLiteralExpression(LiteralExpressionSyntaxNode syntax) {
+    private BoundExpression bindLiteralExpression(LiteralExpressionSyntaxNode syntax)
+    {
         Object value = 0;
 
         Object tokenValue = syntax.getValue();
@@ -80,7 +82,8 @@ final class Binder
      * @param syntax The {@link SyntaxNode} to bind.
      * @throws Exception If the unary operation was called on an incompatible type.
      */
-    private BoundExpression bindUnaryExpression(UnaryExpressionSyntaxNode syntax) throws Exception {
+    private BoundExpression bindUnaryExpression(UnaryExpressionSyntaxNode syntax) throws Exception
+    {
         BoundExpression boundOperand = bindExpression(syntax.getOperand());
         BoundUnaryOperation boundOperator = BoundUnaryOperation.bind(syntax.getOperator().getKind(), boundOperand.getType());
 
@@ -98,7 +101,8 @@ final class Binder
      * @param syntax The {@link SyntaxNode} to bind.
      * @throws Exception If the binary operation was called on one or more incompatible types.
      */
-    private BoundExpression bindBinaryExpression(BinaryExpressionSyntaxNode syntax) throws Exception {
+    private BoundExpression bindBinaryExpression(BinaryExpressionSyntaxNode syntax) throws Exception
+    {
         BoundExpression boundLeft = bindExpression(syntax.getLeft());
         BoundExpression boundRight = bindExpression(syntax.getRight());
         BoundBinaryOperation boundOperator = BoundBinaryOperation.bind(syntax.getOperator().getKind(), boundLeft.getType(), boundRight.getType());

@@ -3,6 +3,7 @@ package com.jahndigital.expressive.binding;
 import com.jahndigital.expressive.syntax.SyntaxKind;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 
 /**
  * An instance of this object represents a typed binary operation. If two incompatible types are found in a binary
@@ -120,10 +121,27 @@ public final class BoundBinaryOperation {
      * An array that lists all the possible permutations of binary operations in the language.
      */
     private static final BoundBinaryOperation[] _operators = {
+            // Integers
             new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, Integer.class),
             new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, Integer.class),
             new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, Integer.class),
             new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, Integer.class),
+
+            // Decimal
+            new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, BigDecimal.class),
+
+            // Decimal + Integer
+            new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, Integer.class, BigDecimal.class, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, BigDecimal.class, Integer.class, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, Integer.class, BigDecimal.class, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, BigDecimal.class, Integer.class, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, Integer.class, BigDecimal.class, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, BigDecimal.class, Integer.class, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, Integer.class, BigDecimal.class, BigDecimal.class),
+            new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, BigDecimal.class, Integer.class, BigDecimal.class),
 
             // Logical
             new BoundBinaryOperation(SyntaxKind.AndToken, BoundBinaryOperationKind.LogicalAnd, Boolean.class),

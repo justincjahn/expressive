@@ -39,12 +39,14 @@ public final class BoundUnaryExpression extends BoundExpression
     }
 
     @Override
-    public Type getType() {
+    public Type getType()
+    {
         return _operator.getResultType();
     }
 
     @Override
-    public BoundNodeKind getKind() {
+    public BoundNodeKind getKind()
+    {
         return BoundNodeKind.UnaryExpression;
     }
 }

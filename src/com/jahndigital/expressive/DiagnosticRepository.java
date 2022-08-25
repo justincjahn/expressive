@@ -61,6 +61,23 @@ public class DiagnosticRepository implements Iterable<Diagnostic> {
         );
     }
 
+    /**
+     * Report an invalid cast to a Decimal during lexing as an error.
+     *
+     * @param text The text that couldn't be casted.
+     * @param position The starting position of the text in the syntax string.
+     */
+    public void addInvalidCastToDecimal(String text, int position)
+    {
+        _diagnostics.add(
+                new Diagnostic(
+                        new TextSpan(position, text.length()),
+                        String.format("Unable to cast '%s' as a valid Decimal at position %d.", text, position),
+                        DiagnosticLevel.ERROR
+                )
+        );
+    }
+
     public void addUnexpectedToken(SyntaxToken currentToken, SyntaxKind expectedKind)
     {
         _diagnostics.add(
