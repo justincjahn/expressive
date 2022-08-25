@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 /**
  * Represents a typed version of a {@link SyntaxTree}.
  */
-public final class BoundSyntaxTree {
+public final class BoundSyntaxTree
+{
     private final DiagnosticRepository _diagnostics;
     private final BoundExpression _root;
 

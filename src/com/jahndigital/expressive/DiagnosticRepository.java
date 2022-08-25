@@ -11,11 +11,13 @@ import java.util.*;
 /**
  * Holds a list of diagnostic information about the parsing, lexing, binding, and evaluation of a syntax string.
  */
-public class DiagnosticRepository implements Iterable<Diagnostic> {
+public class DiagnosticRepository implements Iterable<Diagnostic>
+{
     private final ArrayList<Diagnostic> _diagnostics = new ArrayList<>();
 
     @Override
-    public Iterator<Diagnostic> iterator() {
+    public Iterator<Diagnostic> iterator()
+    {
         return _diagnostics.iterator();
     }
 

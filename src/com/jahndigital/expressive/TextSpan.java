@@ -3,7 +3,8 @@ package com.jahndigital.expressive;
 /**
  * Basic class that represents the starting and ending point of a specific error in the syntax.
  */
-public final class TextSpan {
+public final class TextSpan
+{
     private final int _start;
     private final int _length;
 

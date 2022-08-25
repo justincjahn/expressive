@@ -7,7 +7,8 @@ import java.util.ArrayList;
 /**
  * Represents a token created by the Lexer
  */
-public final class SyntaxToken extends SyntaxNode {
+public final class SyntaxToken extends SyntaxNode
+{
     private final SyntaxKind _kind;
     private final int _position;
     private final String _text;
@@ -16,21 +17,24 @@ public final class SyntaxToken extends SyntaxNode {
     /**
      * Gets the index of the starting position in the original string.
      */
-    public int getPosition() {
+    public int getPosition()
+    {
         return _position;
     }
 
     /**
      * Gets the raw text of the token.
      */
-    public String getText() {
+    public String getText()
+    {
         return _text;
     }
 
     /**
      * Gets the value of the token, or null.
      */
-    public Object getValue() {
+    public Object getValue()
+    {
         return _value;
     }
 
@@ -45,7 +49,8 @@ public final class SyntaxToken extends SyntaxNode {
     /**
      * Init
      */
-    public SyntaxToken(SyntaxKind kind, int position, String text, Object value) {
+    public SyntaxToken(SyntaxKind kind, int position, String text, Object value)
+    {
         this._kind = kind;
         this._position = position;
         this._text = text;
@@ -53,12 +58,14 @@ public final class SyntaxToken extends SyntaxNode {
     }
 
     @Override
-    public SyntaxKind getKind() {
+    public SyntaxKind getKind()
+    {
         return _kind;
     }
 
     @Override
-    public Iterable<SyntaxNode> getChildren() {
+    public Iterable<SyntaxNode> getChildren()
+    {
         return new ArrayList<>();
     }
 }

@@ -5,14 +5,16 @@ import java.util.Arrays;
 /**
  * Represents a literal value.
  */
-public final class LiteralExpressionSyntaxNode extends ExpressionSyntaxNode {
+public final class LiteralExpressionSyntaxNode extends ExpressionSyntaxNode
+{
     private final SyntaxToken _token;
     private final Object _value;
 
     /**
      * Gets the {@link SyntaxToken} that represents this literal value.
      */
-    public SyntaxToken getToken() {
+    public SyntaxToken getToken()
+    {
         return _token;
     }
 
@@ -31,7 +33,8 @@ public final class LiteralExpressionSyntaxNode extends ExpressionSyntaxNode {
     /**
      * Init the object with a null value.
      */
-    public LiteralExpressionSyntaxNode(SyntaxToken t) {
+    public LiteralExpressionSyntaxNode(SyntaxToken t)
+    {
         this(t, null);
     }
 
@@ -45,12 +48,14 @@ public final class LiteralExpressionSyntaxNode extends ExpressionSyntaxNode {
     }
 
     @Override
-    public SyntaxKind getKind() {
+    public SyntaxKind getKind()
+    {
         return SyntaxKind.LiteralExpression;
     }
 
     @Override
-    public Iterable<SyntaxNode> getChildren() {
+    public Iterable<SyntaxNode> getChildren()
+    {
         return Arrays.asList(new SyntaxNode[]{_token});
     }
 }

@@ -36,12 +36,14 @@ public class UnaryExpressionSyntaxNode extends ExpressionSyntaxNode
     }
 
     @Override
-    public SyntaxKind getKind() {
+    public SyntaxKind getKind()
+    {
         return SyntaxKind.UnaryExpression;
     }
 
     @Override
-    public Iterable<SyntaxNode> getChildren() {
+    public Iterable<SyntaxNode> getChildren()
+    {
         return Arrays.asList(_operatorToken, _operand);
     }
 }

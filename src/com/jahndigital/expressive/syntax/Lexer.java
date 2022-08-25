@@ -171,6 +171,20 @@ final class Lexer
                     return new SyntaxToken(SyntaxKind.ExclamationPointToken, _position++, "!", null);
                 }
             }
+            case '>': {
+                if (peek(1) == '=') {
+                    return new SyntaxToken(SyntaxKind.GreaterThanEqualToken, _position += 2, ">=", null);
+                } else {
+                    return new SyntaxToken(SyntaxKind.GreaterThanToken, _position++, ">", null);
+                }
+            }
+            case '<': {
+                if (peek(1) == '=') {
+                    return new SyntaxToken(SyntaxKind.LessThanEqualToken, _position += 2, "<=", null);
+                } else {
+                    return new SyntaxToken(SyntaxKind.LessThanToken, _position++, "<", null);
+                }
+            }
         }
 
         _diagnostics.addBadCharacterInput(getCurrent(), _position);

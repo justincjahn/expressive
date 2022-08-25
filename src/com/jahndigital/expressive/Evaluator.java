@@ -1,14 +1,15 @@
 package com.jahndigital.expressive;
 
 import com.jahndigital.expressive.binding.*;
-import com.sun.javaws.exceptions.InvalidArgumentException;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
  * Walks the AST and evaluates the expression into an integer.
  */
-public final class Evaluator {
+public final class Evaluator
+{
     private final BoundExpression _root;
 
     /**
@@ -84,6 +85,14 @@ public final class Evaluator {
                     return left.equals(right);
                 case NotEquals:
                     return !left.equals(right);
+                case GreaterThan:
+                    return _compareNumbers(left, right, 1, false);
+                case GreaterThanOrEqualTo:
+                    return _compareNumbers(left, right, 1, true);
+                case LessThan:
+                    return _compareNumbers(left, right, -1, false);
+                case LessThanOrEqualTo:
+                    return _compareNumbers(left, right, -1, true);
                 default:
                     throw new Exception(String.format("Unexpected binary operator %s", operation));
             }
@@ -102,10 +111,16 @@ public final class Evaluator {
             return ((BigDecimal)num).negate();
         }
 
-        // Shouldn't ever get here
-        throw new Exception("Only numbers and decimal values can be negated.");
+        throw new Exception(String.format("Invalid negation on type %s.", num.getClass()));
     }
 
+    /**
+     * Returns the provided object as a {@link BigDecimal} or throws an exception.
+     *
+     * @param num An {@link Integer} or {@link BigDecimal} object.
+     * @return A {@link BigDecimal} representing the provided value.
+     * @throws Exception If the conversion failed or an invalid type is provided.
+     */
     private static BigDecimal _getNumberAsDecimal(Object num) throws Exception
     {
         if (num instanceof BigDecimal) {
@@ -116,9 +131,17 @@ public final class Evaluator {
             return new BigDecimal((int)num);
         }
 
-        throw new InvalidArgumentException(new String[] { "num", "Object provided must either be a decimal or an integer." });
+        throw new Exception(String.format("Invalid conversion from type %s to decimal.", num.getClass()));
     }
 
+    /**
+     * Converts the provided objects to {@link BigDecimal} objects.
+     *
+     * @param left The left operand
+     * @param right The right operand
+     * @return An array of two values where index 0 is the left operand and 1 is the right.
+     * @throws Exception If an error occurred parsing the arguments to decimals.
+     */
     private static BigDecimal[] _getNumbersAsDecimal(Object left, Object right) throws Exception
     {
         return new BigDecimal[] { _getNumberAsDecimal(left), _getNumberAsDecimal(right) };
@@ -158,5 +181,33 @@ public final class Evaluator {
     {
         BigDecimal[] values = _getNumbersAsDecimal(left, right);
         return values[0].divide(values[1], RoundingMode.HALF_EVEN);
+    }
+
+    /**
+     * Compares two numbers using Comparable.
+     *
+     * @param left The left operand.
+     * @param right The right operand.
+     * @param compare The integer to compare to.  -1 is less than, 0 is equal, and 1 is greater than.
+     * @param equality If the comparison should also be true if the values are equal.
+     * @return The result of the comparison as a {@link Boolean}.
+     * @throws Exception If a failure occurred during type conversion.
+     */
+    private static Boolean _compareNumbers(Object left, Object right, int compare, boolean equality) throws Exception
+    {
+        int check;
+
+        if (left instanceof Integer && right instanceof Integer) {
+            check = Integer.compare((int)left, (int)right);
+        } else {
+            BigDecimal[] values = _getNumbersAsDecimal(left, right);
+            check = values[0].compareTo(values[1]);
+        }
+
+        if (equality) {
+            return check == compare || check == 0;
+        }
+
+        return check == compare;
     }
 }

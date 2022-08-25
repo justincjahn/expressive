@@ -1,6 +1,7 @@
 package com.jahndigital.expressive;
 
-public enum DiagnosticLevel {
+public enum DiagnosticLevel
+{
     INFO,
     WARN,
     ERROR,

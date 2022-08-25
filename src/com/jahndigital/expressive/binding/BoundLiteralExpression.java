@@ -5,7 +5,8 @@ import java.lang.reflect.Type;
 /**
  * Represents a typed version of a {@link com.jahndigital.expressive.syntax.LiteralExpressionSyntaxNode}.
  */
-public final class BoundLiteralExpression extends BoundExpression {
+public final class BoundLiteralExpression extends BoundExpression
+{
     private final Object _value;
 
     /**
@@ -27,12 +28,14 @@ public final class BoundLiteralExpression extends BoundExpression {
     }
 
     @Override
-    public Type getType() {
+    public Type getType()
+    {
         return _value.getClass();
     }
 
     @Override
-    public BoundNodeKind getKind() {
+    public BoundNodeKind getKind()
+    {
         return BoundNodeKind.LiteralExpression;
     }
 }

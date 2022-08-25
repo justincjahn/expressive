@@ -14,5 +14,9 @@ public enum BoundBinaryOperationKind
     LogicalAnd,
     LogicalOr,
     Equals,
-    NotEquals
+    NotEquals,
+    GreaterThan,
+    GreaterThanOrEqualTo,
+    LessThan,
+    LessThanOrEqualTo,
 }

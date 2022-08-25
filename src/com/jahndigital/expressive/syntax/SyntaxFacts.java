@@ -40,6 +40,10 @@ final class SyntaxFacts
                 return 4;
             case EqualityToken:
             case NegatedEqualityToken:
+            case GreaterThanToken:
+            case GreaterThanEqualToken:
+            case LessThanToken:
+            case LessThanEqualToken:
                 return 3;
             case AndToken:
                 return 2;

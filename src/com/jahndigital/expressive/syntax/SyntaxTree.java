@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
  * Represents the root of a syntax tree, including any diagnostic information resulting from the lexing and parsing of
  * the tree.
  */
-public final class SyntaxTree {
+public final class SyntaxTree
+{
     private final DiagnosticRepository _diagnostics;
     private final ExpressionSyntaxNode _root;
     private final SyntaxToken _eofToken;
@@ -21,21 +22,24 @@ public final class SyntaxTree {
     /**
      * Parse the provided syntax string into a syntax tree.
      */
-    public static SyntaxTree parse(String text) {
+    public static SyntaxTree parse(String text)
+    {
         return new Parser(text, new DiagnosticRepository()).parse();
     }
 
     /**
      * Gets diagnostic information from the parsing and binding.
      */
-    public Iterable<Diagnostic> getDiagnostics() {
+    public Iterable<Diagnostic> getDiagnostics()
+    {
         return _diagnostics;
     }
 
     /**
      * Gets the root {@link SyntaxNode} of the parsed expression.
      */
-    public ExpressionSyntaxNode getRoot() {
+    public ExpressionSyntaxNode getRoot()
+    {
         return _root;
     }
 
@@ -54,7 +58,8 @@ public final class SyntaxTree {
      * @param root The root of the tree.
      * @param endOfFileToken The token that denotes the end of file.
      */
-    SyntaxTree(DiagnosticRepository diagnostics, ExpressionSyntaxNode root, SyntaxToken endOfFileToken) {
+    SyntaxTree(DiagnosticRepository diagnostics, ExpressionSyntaxNode root, SyntaxToken endOfFileToken)
+    {
         _diagnostics = diagnostics;
         _root = root;
         _eofToken = endOfFileToken;
@@ -73,7 +78,8 @@ public final class SyntaxTree {
      *
      * @exception Exception If errors exist before the binding process begins.
      */
-    public BoundSyntaxTree bind() throws Exception {
+    public BoundSyntaxTree bind() throws Exception
+    {
         List<Diagnostic> errors = _diagnostics.asReadOnly().stream().filter(x -> x.getLevel() == DiagnosticLevel.ERROR).collect(Collectors.toList());
         if (!errors.isEmpty()) {
             throw new Exception("Cannot bind a syntax tree with lexer or parser errors.");

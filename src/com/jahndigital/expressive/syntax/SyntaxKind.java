@@ -26,10 +26,16 @@ public enum SyntaxKind
     // Boolean
     AndToken,
     OrToken,
+    EqualityToken,
+    NegatedEqualityToken,
+    GreaterThanToken,
+    GreaterThanEqualToken,
+    LessThanToken,
+    LessThanEqualToken,
 
     // SyntaxNodes
     LiteralExpression,
     BinaryExpression,
     UnaryExpression,
-    EqualityToken, NegatedEqualityToken, ParenthesisedExpression
+    ParenthesisedExpression
 }

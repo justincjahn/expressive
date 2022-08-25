@@ -6,8 +6,10 @@ import java.util.NoSuchElementException;
 /**
  * Represents a generic element of a syntax tree.
  */
-public abstract class SyntaxNode {
+public abstract class SyntaxNode
+{
     public abstract SyntaxKind getKind();
+
     public abstract Iterable<SyntaxNode> getChildren();
 
     /**

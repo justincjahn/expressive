@@ -3,7 +3,8 @@ package com.jahndigital.expressive;
 /**
  * Represents an issue that occurred during the lexing, parsing, and/or evaluation of a string.
  */
-public final class Diagnostic {
+public final class Diagnostic
+{
     private final TextSpan _span;
     private final String _message;
     private final DiagnosticLevel _level;
@@ -41,7 +42,8 @@ public final class Diagnostic {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return String.format("%s: %s", _level, _message);
     }
 }
