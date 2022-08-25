@@ -38,20 +38,21 @@ public final class SyntaxTree {
     public ExpressionSyntaxNode getRoot() {
         return _root;
     }
-    /**
 
+    /**
      * Gets the End of File token for the parsed tree.
      */
-    public SyntaxToken getEndOfFileToken() {
+    public SyntaxToken getEndOfFileToken()
+    {
         return _eofToken;
     }
 
     /**
      * Init
      *
-     * @param diagnostics
-     * @param root
-     * @param endOfFileToken
+     * @param diagnostics The {@link DiagnosticRepository} to use when building the tree.
+     * @param root The root of the tree.
+     * @param endOfFileToken The token that denotes the end of file.
      */
     SyntaxTree(DiagnosticRepository diagnostics, ExpressionSyntaxNode root, SyntaxToken endOfFileToken) {
         _diagnostics = diagnostics;

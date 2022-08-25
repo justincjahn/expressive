@@ -39,7 +39,8 @@ final class Parser {
      *
      * @return The root node of a syntax tree.
      */
-    SyntaxTree parse() {
+    SyntaxTree parse()
+    {
         ExpressionSyntaxNode root = parseExpression();
         SyntaxToken eof = matchToken(SyntaxKind.EndOfFileToken);
         return new SyntaxTree(_diagnostics, root, eof);
@@ -51,7 +52,8 @@ final class Parser {
      * @param offset The offset from the current position to peek ahead.
      * @return The token at position + offset, or the last token.
      */
-    private SyntaxToken peek(int offset) {
+    private SyntaxToken peek(int offset)
+    {
         int index = _position + offset;
 
         if (index > _tokens.size()) {
@@ -64,14 +66,16 @@ final class Parser {
     /**
      * Get the token at the current position.
      */
-    private SyntaxToken getCurrent() {
+    private SyntaxToken getCurrent()
+    {
         return peek(0);
     }
 
     /**
      * Returns the token at the current position and moves the position ahead by one.
      */
-    private SyntaxToken nextToken() {
+    private SyntaxToken nextToken()
+    {
         SyntaxToken current = getCurrent();
         _position++;
         return current;
@@ -83,7 +87,8 @@ final class Parser {
      * @param kind The SyntaxKind to expect.
      * @return The token, if matched, or a "generated" token.
      */
-    private SyntaxToken matchToken(SyntaxKind kind) {
+    private SyntaxToken matchToken(SyntaxKind kind)
+    {
         if (getCurrent().getKind() == kind) {
             return nextToken();
         }
@@ -95,15 +100,16 @@ final class Parser {
     /**
      * Parses an expression and returns it.
      */
-    private ExpressionSyntaxNode parseExpression() {
+    private ExpressionSyntaxNode parseExpression()
+    {
         return parseExpression(0);
     }
 
     /**
      * Parses an expression, selecting an operator based on its precedence.
      *
-     * @param parentPrecedence
-     * @return
+     * @param parentPrecedence The weight of the parent.
+     * @return The parsed syntax node (recursive into a tree).
      */
     private ExpressionSyntaxNode parseExpression(int parentPrecedence)
     {
@@ -136,7 +142,8 @@ final class Parser {
     /**
      * Parses a literal or parenthesised expression and returns it.
      */
-    private ExpressionSyntaxNode parsePrimary() {
+    private ExpressionSyntaxNode parsePrimary()
+    {
         SyntaxKind kind = getCurrent().getKind();
 
         switch (kind) {

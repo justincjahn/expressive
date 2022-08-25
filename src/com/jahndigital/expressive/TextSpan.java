@@ -7,11 +7,21 @@ public final class TextSpan {
     private final int _start;
     private final int _length;
 
+    /**
+     * Gets the start of the text span.
+     *
+     * @return The starting position.
+     */
     public int getStart()
     {
         return _start;
     }
 
+    /**
+     * Get the total length of the text span.
+     *
+     * @return The length.
+     */
     public int getLength()
     {
         return _length;

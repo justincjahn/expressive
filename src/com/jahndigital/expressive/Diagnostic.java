@@ -13,12 +13,23 @@ public final class Diagnostic {
         return _span;
     }
 
+    /**
+     * Gets the diagnostic message.
+     *
+     * @return The message.
+     */
     public String getMessage()
     {
         return _message;
     }
 
-    public DiagnosticLevel getLevel() {
+    /**
+     * Gets the Diagnostic Level
+     *
+     * @return The level.
+     */
+    public DiagnosticLevel getLevel()
+    {
         return _level;
     }
 

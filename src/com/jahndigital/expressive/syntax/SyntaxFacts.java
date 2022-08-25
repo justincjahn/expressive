@@ -8,8 +8,8 @@ final class SyntaxFacts
     /**
      * Gets the priority of the provided unary operator SyntaxKind.
      *
-     * @param kind
-     * @return
+     * @param kind The object to determine precedence.
+     * @return The weight.
      */
     static int getUnaryOperatorPrecedence(SyntaxKind kind)
     {
@@ -26,8 +26,8 @@ final class SyntaxFacts
     /**
      * Gets the priority of the provided binary operator SyntaxKind.
      *
-     * @param kind
-     * @return
+     * @param kind The object to determine precedence.
+     * @return The weight.
      */
     static int getBinaryOperatorPrecedence(SyntaxKind kind)
     {
