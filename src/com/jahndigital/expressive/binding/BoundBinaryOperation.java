@@ -121,35 +121,40 @@ public final class BoundBinaryOperation {
      * An array that lists all the possible permutations of binary operations in the language.
      */
     private static final BoundBinaryOperation[] _operators = {
-            // Integers
-            new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, Integer.class),
-            new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, Integer.class),
-            new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, Integer.class),
-            new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, Integer.class),
+        // Integers
+        new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, Integer.class),
+        new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, Integer.class),
+        new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, Integer.class),
+        new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, Integer.class),
 
-            // Decimal
-            new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, BigDecimal.class),
+        // Decimal
+        new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, BigDecimal.class),
 
-            // Decimal + Integer
-            new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, Integer.class, BigDecimal.class, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, BigDecimal.class, Integer.class, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, Integer.class, BigDecimal.class, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, BigDecimal.class, Integer.class, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, Integer.class, BigDecimal.class, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, BigDecimal.class, Integer.class, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, Integer.class, BigDecimal.class, BigDecimal.class),
-            new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, BigDecimal.class, Integer.class, BigDecimal.class),
+        // Decimal + Integer
+        new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, Integer.class, BigDecimal.class, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.PlusToken, BoundBinaryOperationKind.Addition, BigDecimal.class, Integer.class, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, Integer.class, BigDecimal.class, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.MinusToken, BoundBinaryOperationKind.Subtraction, BigDecimal.class, Integer.class, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, Integer.class, BigDecimal.class, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.StarToken, BoundBinaryOperationKind.Multiplication, BigDecimal.class, Integer.class, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, Integer.class, BigDecimal.class, BigDecimal.class),
+        new BoundBinaryOperation(SyntaxKind.SlashToken, BoundBinaryOperationKind.Division, BigDecimal.class, Integer.class, BigDecimal.class),
 
-            // Logical
-            new BoundBinaryOperation(SyntaxKind.AndToken, BoundBinaryOperationKind.LogicalAnd, Boolean.class),
-            new BoundBinaryOperation(SyntaxKind.OrToken, BoundBinaryOperationKind.LogicalOr, Boolean.class),
-            new BoundBinaryOperation(SyntaxKind.EqualityToken, BoundBinaryOperationKind.Equals, Boolean.class),
-            new BoundBinaryOperation(SyntaxKind.NegatedEqualityToken, BoundBinaryOperationKind.NotEquals, Boolean.class),
+        // Logical
+        new BoundBinaryOperation(SyntaxKind.AndToken, BoundBinaryOperationKind.LogicalAnd, Boolean.class),
+        new BoundBinaryOperation(SyntaxKind.OrToken, BoundBinaryOperationKind.LogicalOr, Boolean.class),
+        new BoundBinaryOperation(SyntaxKind.EqualityToken, BoundBinaryOperationKind.Equals, Boolean.class),
+        new BoundBinaryOperation(SyntaxKind.NegatedEqualityToken, BoundBinaryOperationKind.NotEquals, Boolean.class),
 
-            new BoundBinaryOperation(SyntaxKind.EqualityToken, BoundBinaryOperationKind.Equals, Integer.class, Boolean.class),
-            new BoundBinaryOperation(SyntaxKind.NegatedEqualityToken, BoundBinaryOperationKind.NotEquals, Integer.class, Boolean.class)
+        // Logical Integer
+        new BoundBinaryOperation(SyntaxKind.EqualityToken, BoundBinaryOperationKind.Equals, Integer.class, Boolean.class),
+        new BoundBinaryOperation(SyntaxKind.NegatedEqualityToken, BoundBinaryOperationKind.NotEquals, Integer.class, Boolean.class),
+
+        // Logical BigDecimal
+        new BoundBinaryOperation(SyntaxKind.EqualityToken, BoundBinaryOperationKind.Equals, BigDecimal.class, Boolean.class),
+        new BoundBinaryOperation(SyntaxKind.NegatedEqualityToken, BoundBinaryOperationKind.NotEquals, BigDecimal.class, Boolean.class)
     };
 }
