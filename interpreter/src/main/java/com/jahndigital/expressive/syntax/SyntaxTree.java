@@ -24,7 +24,7 @@ public final class SyntaxTree
      */
     public static SyntaxTree parse(String text)
     {
-        return new Parser(text, new DiagnosticRepository()).parse();
+        return new Parser(text).parse();
     }
 
     /**

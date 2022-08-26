@@ -13,6 +13,8 @@ import java.util.*;
  */
 public class DiagnosticRepository implements Iterable<Diagnostic>
 {
+    public static final DiagnosticRepository DefaultDiagnosticRepository = new DiagnosticRepository();
+
     private final ArrayList<Diagnostic> _diagnostics = new ArrayList<>();
 
     @Override

@@ -1,6 +1,7 @@
 package com.jahndigital.expressive.syntax;
 
 import com.jahndigital.expressive.DiagnosticRepository;
+import com.jahndigital.expressive.FunctionRepository;
 
 import java.util.ArrayList;
 
@@ -10,18 +11,42 @@ import java.util.ArrayList;
 final class Parser
 {
     private final DiagnosticRepository _diagnostics;
+    private final FunctionRepository _functions;
     private final ArrayList<SyntaxToken> _tokens = new ArrayList<>();
     private int _position = 0;
 
     /**
-     * Init
+     * Init with the default {@link DiagnosticRepository} and {@link FunctionRepository}.
+     *
+     * @param text The expression to lex and parse.
+     */
+    Parser(String text)
+    {
+        this(text, DiagnosticRepository.DefaultDiagnosticRepository);
+    }
+
+    /**
+     * Init with the default {@link FunctionRepository}
      *
      * @param text The expression to lex and parse.
      * @param diagnostics The repository to use when reporting issues with lexing.
      */
     Parser(String text, DiagnosticRepository diagnostics)
     {
+        this(text, diagnostics, FunctionRepository.DefaultFunctionRepository);
+    }
+
+    /**
+     * Init with a custom {@link FunctionRepository} instead of the default one.
+     *
+     * @param text The expression to lex and parse.
+     * @param diagnostics The repository to use when reporting issues with lexing.
+     * @param functions The repository to use when attempting to resolve built-in functions.
+     */
+    Parser(String text, DiagnosticRepository diagnostics, FunctionRepository functions)
+    {
         _diagnostics = diagnostics;
+        _functions = functions;
         Lexer lexer = new Lexer(text, diagnostics);
 
         SyntaxToken token;
@@ -29,7 +54,7 @@ final class Parser
             token = lexer.nextToken();
 
             if (token.getKind() != SyntaxKind.WhitespaceToken &&
-                    token.getKind() != SyntaxKind.BadToken) {
+                token.getKind() != SyntaxKind.BadToken) {
                 _tokens.add(token);
             }
         } while (token.getKind() != SyntaxKind.EndOfFileToken);
