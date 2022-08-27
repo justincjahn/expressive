@@ -1,7 +1,11 @@
 package com.jahndigital.expressive.binding;
 
 import com.jahndigital.expressive.DiagnosticRepository;
+import com.jahndigital.expressive.extensibility.ArgumentDefinition;
 import com.jahndigital.expressive.syntax.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Walks a {@link ExpressionSyntaxNode} and generates a type-safe tree of {@link BoundExpression} objects that can be evaluated.
@@ -41,9 +45,8 @@ final class Binder
      * Generate a typed tree and return it.
      *
      * @param syntax The syntax node(s) to walk.
-     * @throws Exception If a fatal error occurred when walking or type checking.
      */
-    private BoundExpression bindExpression(ExpressionSyntaxNode syntax) throws Exception
+    private BoundExpression bindExpression(ExpressionSyntaxNode syntax)
     {
         switch (syntax.getKind()) {
             case LiteralExpression:
@@ -54,8 +57,11 @@ final class Binder
                 return bindBinaryExpression((BinaryExpressionSyntaxNode)syntax);
             case ParenthesisedExpression:
                 return bindExpression(((ParenthesisedExpressionSyntax)syntax).getExpression());
+            case FunctionExpression:
+                return bindFunctionExpression((FunctionExpressionSyntaxNode)syntax);
             default:
-                throw new Exception(String.format("Unexpected syntax %s", syntax.getKind()));
+                _diagnostics.addUnknownExpression(syntax);
+                return new BoundUnknownExpression();
         }
     }
 
@@ -77,12 +83,39 @@ final class Binder
     }
 
     /**
+     * Binds a function that's called during evaluation.
+     *
+     * @param syntax The {@link SyntaxNode} to bind.
+     */
+    private BoundExpression bindFunctionExpression(FunctionExpressionSyntaxNode syntax)
+    {
+        List<ExpressionSyntaxNode> expressionSyntaxArguments = syntax.getArguments();
+        List<ArgumentDefinition> functionArguments = syntax.getFunction().getArguments();
+
+        if (expressionSyntaxArguments.size() != functionArguments.size()) {
+            _diagnostics.addInvalidArgumentLength(syntax.getFunctionName(), expressionSyntaxArguments.size(), syntax.getFunction());
+        }
+
+        ArrayList<BoundExpression> arguments = new ArrayList<>();
+        for (int i = 0; i < expressionSyntaxArguments.size(); i++) {
+            BoundExpression arg = bindExpression(expressionSyntaxArguments.get(i));
+
+            if (functionArguments.size() > i && !functionArguments.get(i).getTypes().contains(arg.getType())) {
+                _diagnostics.addInvalidArgumentType(syntax.getFunctionName(), i, syntax.getFunction(), arg.getType());
+            }
+
+            arguments.add(arg);
+        }
+
+        return new BoundFunctionExpression(syntax.getFunction(), arguments);
+    }
+
+    /**
      * Binds a unary operation (E.g., -1)
      *
      * @param syntax The {@link SyntaxNode} to bind.
-     * @throws Exception If the unary operation was called on an incompatible type.
      */
-    private BoundExpression bindUnaryExpression(UnaryExpressionSyntaxNode syntax) throws Exception
+    private BoundExpression bindUnaryExpression(UnaryExpressionSyntaxNode syntax)
     {
         BoundExpression boundOperand = bindExpression(syntax.getOperand());
         BoundUnaryOperation boundOperator = BoundUnaryOperation.bind(syntax.getOperator().getKind(), boundOperand.getType());
@@ -99,9 +132,8 @@ final class Binder
      * Binds a binary operation (E.g, 1 + 1, true AND false)
      *
      * @param syntax The {@link SyntaxNode} to bind.
-     * @throws Exception If the binary operation was called on one or more incompatible types.
      */
-    private BoundExpression bindBinaryExpression(BinaryExpressionSyntaxNode syntax) throws Exception
+    private BoundExpression bindBinaryExpression(BinaryExpressionSyntaxNode syntax)
     {
         BoundExpression boundLeft = bindExpression(syntax.getLeft());
         BoundExpression boundRight = bindExpression(syntax.getRight());

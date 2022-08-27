@@ -6,6 +6,8 @@ package com.jahndigital.expressive.binding;
 enum BoundNodeKind
 {
     LiteralExpression,
+    FunctionExpression,
     BinaryExpression,
-    UnaryExpression
+    UnaryExpression,
+    UnknownExpression,
 }

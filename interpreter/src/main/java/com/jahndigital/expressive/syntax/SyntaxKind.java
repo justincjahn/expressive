@@ -14,6 +14,7 @@ public enum SyntaxKind
     SlashToken,
     OpenParenthesisToken,
     CloseParenthesisToken,
+    CommaToken,
     ExclamationPointToken,
     BadToken,
     EndOfFileToken,
@@ -35,6 +36,7 @@ public enum SyntaxKind
 
     // SyntaxNodes
     LiteralExpression,
+    FunctionExpression,
     BinaryExpression,
     UnaryExpression,
     ParenthesisedExpression

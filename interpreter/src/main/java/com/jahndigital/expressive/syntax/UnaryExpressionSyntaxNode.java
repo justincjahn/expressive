@@ -5,10 +5,10 @@ import java.util.Arrays;
 /**
  * Represents an expression that performs an operation on a single operand.
  */
-public class UnaryExpressionSyntaxNode extends ExpressionSyntaxNode
+public final class UnaryExpressionSyntaxNode extends ExpressionSyntaxNode
 {
-    SyntaxToken _operatorToken;
-    ExpressionSyntaxNode _operand;
+    final SyntaxToken _operatorToken;
+    final ExpressionSyntaxNode _operand;
 
     /**
      * Gets the operator of the unary operation.

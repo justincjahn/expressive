@@ -1,6 +1,7 @@
 package com.jahndigital.expressive;
 
 import com.jahndigital.expressive.binding.BoundSyntaxTree;
+import com.jahndigital.expressive.extensibility.HelloWorldFunction;
 import com.jahndigital.expressive.syntax.SyntaxTree;
 
 import java.util.*;
@@ -9,6 +10,8 @@ public class Main
 {
     public static void main(String[] args)
     {
+        FunctionRepository.DefaultFunctionRepository.add(new HelloWorldFunction());
+
         boolean showTree = false;
         Scanner scanner = new Scanner(System.in);
 

@@ -64,10 +64,6 @@ final class Lexer
      */
     SyntaxToken nextToken()
     {
-        if (_position >= _text.length()) {
-            return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0", null);
-        }
-
         if (Character.isDigit(getCurrent())) {
             int start = _position;
             int numPeriods = 0;
@@ -119,16 +115,18 @@ final class Lexer
         if (Character.isLetter(getCurrent())) {
             int start = _position;
 
-            while (Character.isLetter(getCurrent()) || Character.isDigit(getCurrent())) {
+            while (Character.isLetter(getCurrent()) || Character.isDigit(getCurrent()) || getCurrent() == '_') {
                 next();
             }
 
             String text = _text.substring(start, _position);
             SyntaxKind kind = SyntaxFacts.getKeywordKind(text);
-            return new SyntaxToken(kind, start, text, null);
+            return new SyntaxToken(kind, start, text, text);
         }
 
         switch (getCurrent()) {
+            case '\0':
+                return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0", null);
             case '+':
                 return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+", null);
             case '-':
@@ -141,6 +139,8 @@ final class Lexer
                 return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
             case ')':
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
+            case ',':
+                return new SyntaxToken(SyntaxKind.CommaToken, _position++, ",", null);
             case '&':
             {
                 if (peek(1) == '&') {
@@ -162,6 +162,7 @@ final class Lexer
                     return new SyntaxToken(SyntaxKind.EqualityToken, _position += 2, "==", null);
                 }
 
+                _diagnostics.addBadCharacterInput(getCurrent(), _position);
                 break;
             }
             case '!': {

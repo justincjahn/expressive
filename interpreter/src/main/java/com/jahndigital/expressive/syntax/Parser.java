@@ -2,6 +2,8 @@ package com.jahndigital.expressive.syntax;
 
 import com.jahndigital.expressive.DiagnosticRepository;
 import com.jahndigital.expressive.FunctionRepository;
+import com.jahndigital.expressive.TextSpan;
+import com.jahndigital.expressive.extensibility.IFunction;
 
 import java.util.ArrayList;
 
@@ -67,6 +69,7 @@ final class Parser
      */
     SyntaxTree parse()
     {
+        _diagnostics.reset();
         ExpressionSyntaxNode root = parseExpression();
         SyntaxToken eof = matchToken(SyntaxKind.EndOfFileToken);
         return new SyntaxTree(_diagnostics, root, eof);
@@ -137,6 +140,7 @@ final class Parser
      * @param parentPrecedence The weight of the parent.
      * @return The parsed syntax node (recursive into a tree).
      */
+    @SuppressWarnings("InfiniteRecursion")
     private ExpressionSyntaxNode parseExpression(int parentPrecedence)
     {
         ExpressionSyntaxNode left;
@@ -173,23 +177,71 @@ final class Parser
         SyntaxKind kind = getCurrent().getKind();
 
         switch (kind) {
-            case OpenParenthesisToken: {
+            case OpenParenthesisToken:
+            {
                 SyntaxToken left = nextToken();
                 ExpressionSyntaxNode expression = parseExpression();
                 SyntaxToken right = matchToken(SyntaxKind.CloseParenthesisToken);
                 return new ParenthesisedExpressionSyntax(left, expression, right);
             }
-
             case TrueToken:
-            case FalseToken: {
+            case FalseToken:
+            {
                 boolean value = kind == SyntaxKind.TrueToken;
                 return new LiteralExpressionSyntaxNode(nextToken(), value);
             }
-
-            default: {
+            case KeywordToken:
+            {
+                return parseFunction();
+            }
+            default:
+            {
                 SyntaxToken numberToken = matchToken(SyntaxKind.NumberToken);
                 return new LiteralExpressionSyntaxNode(numberToken);
             }
         }
+    }
+
+    /**
+     * Generate a {@link FunctionExpressionSyntaxNode}, recursively parse arguments, and return it.
+     */
+    private FunctionExpressionSyntaxNode parseFunction()
+    {
+        SyntaxToken functionNameToken = nextToken();
+
+        // Attempt to find the function
+        IFunction function = null;
+        for (IFunction x : _functions) {
+            if (x.getName().equalsIgnoreCase(functionNameToken.getText())) {
+                function = x;
+                break;
+            }
+        }
+
+        if (function == null) {
+            _diagnostics.addUnregisteredFunction(functionNameToken);
+        }
+
+        ArrayList<ExpressionSyntaxNode> arguments = new ArrayList<>();
+        if (getCurrent().getKind() == SyntaxKind.OpenParenthesisToken) {
+            SyntaxToken openArguments = matchToken(SyntaxKind.OpenParenthesisToken);
+
+            while(getCurrent().getKind() != SyntaxKind.CloseParenthesisToken) {
+                if (getCurrent().getKind() == SyntaxKind.EndOfFileToken) {
+                    _diagnostics.addMissingClosingParentheses(new TextSpan(openArguments.getPosition(), getCurrent().getPosition()));
+                    break;
+                }
+
+                arguments.add(parseExpression());
+
+                if (getCurrent().getKind() == SyntaxKind.CommaToken) {
+                    matchToken(SyntaxKind.CommaToken);
+                }
+            }
+
+            matchToken(SyntaxKind.CloseParenthesisToken);
+        }
+
+        return new FunctionExpressionSyntaxNode(functionNameToken, function, arguments);
     }
 }

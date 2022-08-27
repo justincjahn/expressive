@@ -168,10 +168,14 @@ public final class BoundBinaryOperation
         new BoundBinaryOperation(SyntaxKind.LessThanEqualToken, BoundBinaryOperationKind.LessThanOrEqualTo, BigDecimal.class, Boolean.class),
 
         // Logical Decimal + Integer
+        new BoundBinaryOperation(SyntaxKind.EqualityToken, BoundBinaryOperationKind.Equals, BigDecimal.class, Integer.class, Boolean.class),
+        new BoundBinaryOperation(SyntaxKind.NegatedEqualityToken, BoundBinaryOperationKind.NotEquals, BigDecimal.class, Integer.class, Boolean.class),
         new BoundBinaryOperation(SyntaxKind.GreaterThanToken, BoundBinaryOperationKind.GreaterThan, BigDecimal.class, Integer.class, Boolean.class),
         new BoundBinaryOperation(SyntaxKind.GreaterThanEqualToken, BoundBinaryOperationKind.GreaterThanOrEqualTo, BigDecimal.class, Integer.class, Boolean.class),
         new BoundBinaryOperation(SyntaxKind.LessThanToken, BoundBinaryOperationKind.LessThan, BigDecimal.class, Integer.class, Boolean.class),
         new BoundBinaryOperation(SyntaxKind.LessThanEqualToken, BoundBinaryOperationKind.LessThanOrEqualTo, BigDecimal.class, Integer.class, Boolean.class),
+        new BoundBinaryOperation(SyntaxKind.EqualityToken, BoundBinaryOperationKind.Equals, Integer.class, BigDecimal.class, Boolean.class),
+        new BoundBinaryOperation(SyntaxKind.NegatedEqualityToken, BoundBinaryOperationKind.NotEquals, Integer.class, BigDecimal.class, Boolean.class),
         new BoundBinaryOperation(SyntaxKind.GreaterThanToken, BoundBinaryOperationKind.GreaterThan, Integer.class, BigDecimal.class, Boolean.class),
         new BoundBinaryOperation(SyntaxKind.GreaterThanEqualToken, BoundBinaryOperationKind.GreaterThanOrEqualTo, Integer.class, BigDecimal.class, Boolean.class),
         new BoundBinaryOperation(SyntaxKind.LessThanToken, BoundBinaryOperationKind.LessThan, Integer.class, BigDecimal.class, Boolean.class),

@@ -4,6 +4,10 @@ import com.jahndigital.expressive.binding.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Walks the AST and evaluates the expression into an integer.
@@ -11,6 +15,7 @@ import java.math.RoundingMode;
 public final class Evaluator
 {
     private final BoundExpression _root;
+    private Map<String, Object> _runtimeContext;
 
     /**
      * Init
@@ -29,6 +34,19 @@ public final class Evaluator
      */
     public Object evaluate() throws Exception
     {
+        return evaluate(new HashMap<>());
+    }
+
+    /**
+     * Evaluates the expression, returning the result as an object.
+     *
+     * @param runtimeContext A map of strings to objects that are passed to
+     *                       {@link com.jahndigital.expressive.extensibility.IFunction} objects during evaluation.
+     * @throws Exception If an unrecoverable error was encountered during evaluation.
+     */
+    public Object evaluate(HashMap<String, Object> runtimeContext) throws Exception
+    {
+        _runtimeContext = runtimeContext;
         return evaluateExpression(_root);
     }
 
@@ -43,6 +61,26 @@ public final class Evaluator
     {
         if (root instanceof BoundLiteralExpression) {
             return ((BoundLiteralExpression) root).getValue();
+        }
+
+        if (root instanceof BoundFunctionExpression) {
+            BoundFunctionExpression funcExpression = (BoundFunctionExpression)root;
+
+            List<Object> args = new ArrayList<>();
+            for (BoundExpression boundArgs : funcExpression.getArguments()) {
+                args.add(evaluateExpression(boundArgs));
+            }
+
+            try {
+                return funcExpression.getFunction().execute(args, _runtimeContext);
+            } catch (Exception e) {
+                throw new FunctionExecutionFailedException(
+                    e,
+                    funcExpression.getFunction(),
+                    args,
+                    _runtimeContext
+                );
+            }
         }
 
         if (root instanceof BoundUnaryExpression) {
@@ -64,10 +102,20 @@ public final class Evaluator
 
         if (root instanceof BoundBinaryExpression) {
             BoundBinaryExpression b = (BoundBinaryExpression)root;
+            BoundBinaryOperationKind operation = b.getOperatorKind();
             Object left = evaluateExpression(b.getLeft());
+
+            // Support short-circuiting
+            if (operation == BoundBinaryOperationKind.LogicalAnd && left.equals(false)) {
+                return left;
+            }
+
+            if (operation == BoundBinaryOperationKind.LogicalOr && left.equals(true)) {
+                return left;
+            }
+
             Object right = evaluateExpression(b.getRight());
 
-            BoundBinaryOperationKind operation = b.getOperatorKind();
             switch (operation) {
                 case Addition:
                     return _evaluateAddition(left, right);
@@ -82,9 +130,9 @@ public final class Evaluator
                 case LogicalOr:
                     return (boolean)left || (boolean)right;
                 case Equals:
-                    return left.equals(right);
+                    return _evaluateEquality(left, right);
                 case NotEquals:
-                    return !left.equals(right);
+                    return !_evaluateEquality(left, right);
                 case GreaterThan:
                     return _compareNumbers(left, right, 1, false);
                 case GreaterThanOrEqualTo:
@@ -101,6 +149,13 @@ public final class Evaluator
         return 0;
     }
 
+    /**
+     * Negate an {@link Integer} or {@link BigDecimal}.
+     *
+     * @param num The number to negate.
+     * @return The negated number
+     * @throws Exception If an attempt was made to negate an unsupported type.
+     */
     private static Object _negate(Object num) throws Exception
     {
         if (num instanceof Integer) {
@@ -147,6 +202,14 @@ public final class Evaluator
         return new BigDecimal[] { _getNumberAsDecimal(left), _getNumberAsDecimal(right) };
     }
 
+    /**
+     * Add two numeric values together.
+     *
+     * @param left The left operand
+     * @param right The right operand
+     * @return The sum of the two operands.
+     * @throws Exception If an error occurred parsing the arguments to decimals.
+     */
     private static Object _evaluateAddition(Object left, Object right) throws Exception
     {
         if (left instanceof Integer && right instanceof Integer) {
@@ -157,6 +220,14 @@ public final class Evaluator
         return values[0].add(values[1]);
     }
 
+    /**
+     * Subtract two numeric values.
+     *
+     * @param left The left operand
+     * @param right The right operand
+     * @return The difference of the two operands.
+     * @throws Exception If an error occurred parsing the arguments to decimals.
+     */
     private static Object _evaluateSubtraction(Object left, Object right) throws Exception
     {
         if (left instanceof Integer && right instanceof Integer) {
@@ -167,6 +238,14 @@ public final class Evaluator
         return values[0].subtract(values[1]);
     }
 
+    /**
+     * Multiply two numeric values.
+     *
+     * @param left The left operand
+     * @param right The right operand
+     * @return The product of the two operands.
+     * @throws Exception If an error occurred parsing the arguments to decimals.
+     */
     private static Object _evaluateMultiplication(Object left, Object right) throws Exception
     {
         if (left instanceof Integer && right instanceof Integer) {
@@ -177,10 +256,36 @@ public final class Evaluator
         return values[0].multiply(values[1]);
     }
 
+    /**
+     * Divide two numeric values.
+     *
+     * @param left The left operand
+     * @param right The right operand
+     * @return The quotient of the two operands.
+     * @throws Exception If an error occurred parsing the arguments to decimals.
+     */
     private static Object _evaluateDivision(Object left, Object right) throws Exception
     {
         BigDecimal[] values = _getNumbersAsDecimal(left, right);
         return values[0].divide(values[1], RoundingMode.HALF_EVEN);
+    }
+
+    /**
+     * Determine if the left and right values are equal to each other.
+     *
+     * @param left The left operand
+     * @param right The right operand
+     * @return true if the two values are equal
+     * @throws Exception If an error occurred parsing the arguments to decimals.
+     */
+    private static Boolean _evaluateEquality(Object left, Object right) throws Exception
+    {
+        // Comparing int and decimal types requires conversion
+        if (left instanceof BigDecimal || right instanceof BigDecimal) {
+            return _compareNumbers(left, right, 0, false);
+        }
+
+        return left.equals(right);
     }
 
     /**
